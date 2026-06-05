@@ -50,7 +50,7 @@ function getFrontPicture(pokeID) {
       return;
     }
     const img = new Image();
-    img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
+    img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokeID}.gif`;
     img.onload = () => {
       imageCache[pokeID] = img; // Bild im Cache speichern
       resolve(img);
@@ -62,7 +62,7 @@ function getFrontPicture(pokeID) {
 function getPokemonImageUrl(pokeID) {
   if (!imageCache[pokeID]) {
     imageCache[pokeID] =
-      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
+      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdows//${pokeID}.png`;
   }
   return imageCache[pokeID];
 }
