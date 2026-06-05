@@ -1,0 +1,93 @@
+.main_content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 50px 120px;
+}
+
+.card_section {
+  width: 280px;
+  height: 200px;
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 35px;
+  box-shadow:
+    10px 10px 10px #dbdbdb,
+    -21px -21px 21px #ffffff;
+}
+
+.card_head {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.types {
+  display: flex;
+  gap: 16px;
+}
+
+.type_tag {
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  line-height: 120%;
+  border-radius: 40%;
+
+  box-shadow:
+    0px 0px 1px rgba(3, 7, 18, 0.07),
+    0px 0px 3px rgba(3, 7, 18, 0.13),
+    0px 1px 6px rgba(3, 7, 18, 0.2),
+    0px 2px 11px rgba(3, 7, 18, 0.26),
+    0px 3px 17px rgba(3, 7, 18, 0.33);
+}
+
+.card_body {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.pkm_sprite > img {
+  width: 123px;
+  height: 120px;
+}
+
+dialog {
+  flex-wrap: wrap;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  width: 350px;
+  height: 600px;
+  border-radius: 40px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  position: absolute;
+}
+
+dialog.opened {
+  border: none;
+  transition: all 2s ease-in;
+  width: 350px;
+  height: 600px;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+dialog::backdrop {
+  opacity: 0;
+  background-color: black;
+  transition: all 250ms ease-in;
+}
+
+dialog.opened::backdrop {
+  opacity: 0.5;
+  background-color: black;
+  transition: all 250ms ease-in;
+}
