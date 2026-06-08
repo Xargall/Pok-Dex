@@ -6,7 +6,7 @@
 }
 
 .card_section {
-  width: 280px;
+  width: 340px;
   height: 200px;
   margin: 12px;
   display: flex;
@@ -21,7 +21,7 @@
 .card_head {
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 16px 16px 0;
 }
 
 .types {
@@ -34,7 +34,8 @@
   height: 30px;
   text-align: center;
   line-height: 120%;
-  border-radius: 40%;
+  border-radius: 50%;
+  line-height: 120%;
 
   box-shadow:
     0px 0px 1px rgba(3, 7, 18, 0.07),
@@ -90,4 +91,10 @@ dialog.opened::backdrop {
   opacity: 0.5;
   background-color: black;
   transition: all 250ms ease-in;
+}
+
+.load_more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
