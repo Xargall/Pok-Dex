@@ -40,20 +40,48 @@ function getDialogTemplate(i) {
                 <div class="measures">
                     <div>
                         <p>Height</p>
-                        <p id="height">${pokemonInfos[i].height}</p>
+                        <p id="height"></p>
                     </div>
                     <div>
                         <p>Weight</p>
-                        <p id="weight">${pokemonInfos[i].weight}</p>
+                        <p id="weight"></p>
                     </div>
                 </div>
             </div>
             <div class="stat_block">
-                <table>
-
+                <table id="table">
                 </table>
             </div>
-            <div class="evolution"></div>
+            <div class="evolution" id="evoChain"></div>
         </section>
+    `;
+}
+
+function getTableTemplate(i) {
+  return /*html*/ `
+        <tr>
+            <td>HP</td>
+            <td>${pokemonInfos[i].stats[0].base_stat}</td>
+        </tr>
+        <tr>
+            <td>Attack</td>
+            <td>${pokemonInfos[i].stats[1].base_stat}</td>
+        </tr>
+        <tr>
+            <td>Defense</td>
+            <td>${pokemonInfos[i].stats[2].base_stat}</td>
+        </tr>
+        <tr>
+            <td>S-Attack</td>
+            <td>${pokemonInfos[i].stats[3].base_stat}</td>
+        </tr>
+        <tr>
+            <td>S-Defense</td>
+            <td>${pokemonInfos[i].stats[4].base_stat}</td>
+        </tr>
+        <tr>
+            <td>Speed</td>
+            <td>${pokemonInfos[i].stats[5].base_stat}</td>
+        </tr>
     `;
 }

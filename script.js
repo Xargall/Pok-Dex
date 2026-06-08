@@ -10,6 +10,8 @@ let pokemonCharacteristics = [];
 
 let imageCache = {};
 
+let evoChain = [];
+
 async function init() {
   let url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151";
   let result = await fetch(url);
@@ -18,7 +20,7 @@ async function init() {
   await bulkLoadPokemon();
   console.log(pokemonInfos);
   console.log(pokemonCharacteristics);
-  console.log(imageCache);
+  console.log(evoChain);
 }
 
 async function bulkLoadPokemon() {
@@ -86,7 +88,7 @@ function getFrontPicture(pokeID) {
     const img = new Image();
     img.src = url;
     img.onload = () => {
-      imageCache[pokeID] = url; // Bild im Cache speichern
+      imageCache[pokeID] = url;
       resolve(img);
     };
     img.onerror = reject;
@@ -187,11 +189,50 @@ function renderDialogDescription(i) {
   descRef.innerHTML = newDescription;
 }
 
+function renderHeight(i) {
+  const heightRef = document.getElementById("height");
+  const height = (pokemonInfos[i].height / 10).toFixed(1) + "m";
+  heightRef.innerHTML = height;
+}
+
+function renderWeight(i) {
+  const weightRef = document.getElementById("weight");
+  const weight = (pokemonInfos[i].weight / 10).toFixed(1) + "Kg";
+  weightRef.innerHTML = weight;
+}
+
+function renderTable(i) {
+  const tableRef = document.getElementById("table");
+  tableRef.innerHTML = getTableTemplate(i);
+}
+
+async function renderEvolutionChain(i) {
+  let pokeId = i + 1;
+  const speciesRes = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
+  );
+  const species = await speciesRes.json();
+  const evoRes = await fetch(species.evolution_chain.url);
+  const chain = (await evoRes.json()).chain;
+  const evoRef = document.getElementById("evoChain");
+
+  if (chain.evolves_to.length === 0) return (evoRef.innerHTML = "No Evolution");
+  let evoText = chain.species.name + " → " + chain.evolves_to[0].species.name;
+  if (chain.evolves_to[0].evolves_to.length > 0)
+    evoText += " → " + chain.evolves_to[0].evolves_to[0].species.name;
+
+  evoRef.innerHTML = evoText;
+}
+
 function renderDialogContent(i) {
   renderDialogPicture(i);
   renderDialogName(i);
   renderDialogTypes(i);
   renderDialogDescription(i);
+  renderHeight(i);
+  renderWeight(i);
+  renderTable(i);
+  renderEvolutionChain(i);
 }
 
 function closeDetails() {
