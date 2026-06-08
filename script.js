@@ -208,20 +208,29 @@ function renderTable(i) {
 
 async function renderEvolutionChain(i) {
   let pokeId = i + 1;
-  const speciesRes = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
-  );
+  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,);
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
   const chain = (await evoRes.json()).chain;
   const evoRef = document.getElementById("evoChain");
-
+  evoRef.innerHTML = "";
   if (chain.evolves_to.length === 0) return (evoRef.innerHTML = "No Evolution");
-  let evoText = chain.species.name + " → " + chain.evolves_to[0].species.name;
-  if (chain.evolves_to[0].evolves_to.length > 0)
-    evoText += " → " + chain.evolves_to[0].evolves_to[0].species.name;
+  evoRef.appendChild(evoImg(chain.species.url));
+  evoRef.innerHTML += " → ";
+  evoRef.appendChild(evoImg(chain.evolves_to[0].species.url));
+  if (chain.evolves_to[0].evolves_to.length > 0) {
+    evoRef.innerHTML += " → ";
+    evoRef.appendChild(evoImg(chain.evolves_to[0].evolves_to[0].species.url));
+  }
+}
 
-  evoRef.innerHTML = evoText;
+function evoImg(url) {
+  const id = url.split("/").filter(Boolean).pop();
+  const img = new Image();
+  img.src =
+    imageCache[id] ??
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+  return img;
 }
 
 function renderDialogContent(i) {

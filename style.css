@@ -98,3 +98,8 @@ dialog.opened::backdrop {
   align-items: center;
   justify-content: center;
 }
+
+.evolution img {
+  width: 72px;
+  height: auto;
+}
