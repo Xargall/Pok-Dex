@@ -25,10 +25,10 @@ function getTypesTemplate(i, index) {
 
 function getDialogTemplate(i) {
   return /*html*/ `
-        <section class="detail_view">
+        <section class="detail_view" onclick="bubbleProtection(event)">
             <div class="detail_head">
                 <div id="dialog_pokemonImg${i}" class="pkm_sprite"></div>
-                <button></button>
+                <button onclick="playPokemonCry(${i})"></button>
             </div>
             <div class="detail_pkm">
                 <p>#${pokemonInfos[i].id}</p>

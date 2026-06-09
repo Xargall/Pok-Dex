@@ -8,6 +8,8 @@ let pokemonInfos = [];
 
 let pokemonCharacteristics = [];
 
+let pokemonCry = [];
+
 let imageCache = {};
 
 let evoChain = [];
@@ -80,6 +82,13 @@ async function loadPokemonInfo(pokeID) {
   return resultAsJSON;
 }
 
+async function getPkmDescription(pokeID) {
+  let url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
+  let characteristics = await fetch(url);
+  let characteristicsAsJSON = await characteristics.json();
+  return characteristicsAsJSON;
+}
+
 function getFrontPicture(pokeID) {
   return new Promise((resolve, reject) => {
     const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
@@ -135,13 +144,6 @@ function renderTypes(i) {
   for (let index = 0; index < typeArray.length; index++) {
     typeRef.innerHTML += getTypesTemplate(i, index);
   }
-}
-
-async function getPkmDescription(pokeID) {
-  let url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
-  let characteristics = await fetch(url);
-  let characteristicsAsJSON = await characteristics.json();
-  return characteristicsAsJSON;
 }
 
 function renderDescription(i) {
@@ -250,6 +252,10 @@ function renderDialogContent(i) {
   renderEvolutionChain(i);
 }
 
+function bubbleProtection(event) {
+  event.stopPropagation();
+}
+
 function closeDetails() {
   const detailRef = document.getElementById("details");
   detailRef.close();
@@ -267,4 +273,10 @@ function searchPokemon() {
     cardRef.innerHTML += getPokemonCardTemplate(index);
     renderCardContent(index, p.id);
   });
+}
+
+function playPokemonCry(i) {
+  const url = pokemonInfos[i].cries.latest;
+  const audio = new Audio(url);
+  audio.play();
 }
