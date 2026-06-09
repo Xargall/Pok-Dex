@@ -2,8 +2,6 @@ let START = 1;
 let STOP = START + 20;
 let isLoading = false;
 
-let pokemon = [];
-
 let pokemonInfos = [];
 
 let pokemonCharacteristics = [];
@@ -12,17 +10,10 @@ let pokemonCry = [];
 
 let imageCache = {};
 
-let evoChain = [];
-
 async function init() {
-  let url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151";
-  let result = await fetch(url);
-  let resultAsJSON = await result.json();
-  pokemon = resultAsJSON.results;
   await bulkLoadPokemon();
   console.log(pokemonInfos);
-  console.log(pokemonCharacteristics);
-  console.log(evoChain);
+  console.log(pokemonCharacteristics);  
 }
 
 async function bulkLoadPokemon() {
@@ -121,7 +112,6 @@ function renderCardContent(i, pokeID) {
   renderPicture(i, pokeID);
   renderName(i);
   renderTypes(i);
-  renderDescription(i);
 }
 
 function renderPicture(i, pokeID) {
@@ -133,7 +123,7 @@ function renderPicture(i, pokeID) {
 
 function renderName(i) {
   let pkmNameRef = document.getElementById(`pkm_name${i}`);
-  const word = pokemon[i].name;
+  const word = pokemonInfos[i].name;
   const capitalizedName = word.charAt(0).toUpperCase() + word.slice(1);
   pkmNameRef.innerHTML = capitalizedName;
 }
@@ -146,14 +136,6 @@ function renderTypes(i) {
   }
 }
 
-function renderDescription(i) {
-  const descRef = document.getElementById(`description${i}`);
-  descRef.innerHTML = "";
-  let characteristicsDisplay =
-    pokemonCharacteristics[i].flavor_text_entries[2].flavor_text;
-  let newDescription = characteristicsDisplay.replace(/[\f\r\n\t]/g, " ");
-  descRef.innerHTML = newDescription;
-}
 
 function openDetails(i) {
   const detailRef = document.getElementById("details");
@@ -173,7 +155,7 @@ function renderDialogPicture(i) {
 
 function renderDialogName(i) {
   let pkmNameRef = document.getElementById(`dialog_name${i}`);
-  const word = pokemon[i].name;
+  const word = pokemonInfos[i].name;
   const capitalizedName = word.charAt(0).toUpperCase() + word.slice(1);
   pkmNameRef.innerHTML = capitalizedName;
 }
@@ -214,9 +196,7 @@ function renderTable(i) {
 
 async function renderEvolutionChain(i) {
   let pokeId = i + 1;
-  const speciesRes = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
-  );
+  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,);
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
   const chain = (await evoRes.json()).chain;
