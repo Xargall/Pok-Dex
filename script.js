@@ -26,7 +26,7 @@ async function init() {
 }
 
 async function bulkLoadPokemon() {
-  document.getElementById("loader").style.display = "block";
+  document.getElementById("loader").style.display = "flex";
   const promises = [];
   for (let pokeID = 1; pokeID <= 20; pokeID++) {
     promises.push(
@@ -52,7 +52,7 @@ async function bulkLoadNextPokemon() {
   const renderFrom = pokemonInfos.length;
   if (isLoading) return;
   isLoading = true;
-  document.getElementById("loader").style.display = "block";
+  document.getElementById("loader").style.display = "flex";
   const promises = [];
   for (let pokeID = START; pokeID < STOP; pokeID++) {
     promises.push(
