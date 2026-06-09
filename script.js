@@ -24,6 +24,7 @@ async function init() {
 }
 
 async function bulkLoadPokemon() {
+  document.getElementById("loader").style.display = "block";
   const promises = [];
   for (let pokeID = 1; pokeID <= 20; pokeID++) {
     promises.push(
@@ -42,12 +43,14 @@ async function bulkLoadPokemon() {
   START += 20;
   STOP += 20;
   renderPokemonCard();
+  document.getElementById("loader").style.display = "none";
 }
 
 async function bulkLoadNextPokemon() {
   const renderFrom = pokemonInfos.length;
   if (isLoading) return;
   isLoading = true;
+  document.getElementById("loader").style.display = "block";
   const promises = [];
   for (let pokeID = START; pokeID < STOP; pokeID++) {
     promises.push(
@@ -66,6 +69,7 @@ async function bulkLoadNextPokemon() {
   START += 20;
   STOP += 20;
   renderPokemonCard(renderFrom);
+  document.getElementById("loader").style.display = "none";
   isLoading = false;
 }
 
@@ -208,7 +212,9 @@ function renderTable(i) {
 
 async function renderEvolutionChain(i) {
   let pokeId = i + 1;
-  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,);
+  const speciesRes = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
+  );
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
   const chain = (await evoRes.json()).chain;
@@ -248,4 +254,17 @@ function closeDetails() {
   const detailRef = document.getElementById("details");
   detailRef.close();
   detailRef.classList.remove("opened");
+}
+
+function searchPokemon() {
+  const input = document.querySelector("input").value.toLowerCase();
+  const cardRef = document.getElementById("content");
+  cardRef.innerHTML = "";
+  if (input.length === 0) return renderPokemonCard(0);
+  const filtered = pokemonInfos.filter((p) => p.name.includes(input));
+  filtered.forEach((p) => {
+    const index = pokemonInfos.indexOf(p);
+    cardRef.innerHTML += getPokemonCardTemplate(index);
+    renderCardContent(index, p.id);
+  });
 }
