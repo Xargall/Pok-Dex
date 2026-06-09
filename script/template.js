@@ -23,30 +23,30 @@ function getPokemonCardTemplate(i) {
 
 function getTypesTemplate(i, index) {
   return /*html*/ `
-    <div class="${pokemonInfos[i].types[index].type.name} type_tag">${pokemonInfos[i].types[index].type.name}</div>
+    <div class="${pokemonInfos[i].types[index].type.name} type_tag">${pokemonInfos[i].types[index].type.name.charAt(0).toUpperCase() + pokemonInfos[i].types[index].type.name.slice(1)}</div>
 `;
 }
 
 function getDialogTemplate(i) {
   return /*html*/ `
         <section class="detail_view" onclick="bubbleProtection(event)">
-            <div class="detail_head">
-                <div id="dialog_pokemonImg${i}" class="pkm_sprite"></div>
-                <button onclick="playPokemonCry(${i})"></button>
+            <div class="detail_head ${pokemonInfos[i].types[0].type.name} curved-edge">
+                <div id="dialog_pokemonImg${i}" class="detail_sprite"></div>
+                <button class="cry_btn" onclick="playPokemonCry(${i})"><img src="../assets/icons/Icon (1).png" alt=""></button>
             </div>
             <div class="detail_pkm">
                 <p>#${String(pokemonInfos[i].id).padStart(3, "0")}</p>
                 <h2 id="dialog_name${i}"></h2>
-                <div id="dialog_types${i}" class="types"></div>
+                <div id="dialog_types${i}" class="dialog_types"></div>
             </div>
             <div class="description">
-                <article id="dialog_description${i}"></article>
+                <article id="dialog_description${i}" class="detail_description"></article>
                 <div class="measures">
-                    <div>
+                    <div class="measures_style">
                         <p>Height</p>
                         <p id="height"></p>
                     </div>
-                    <div>
+                    <div class="measures_style">
                         <p>Weight</p>
                         <p id="weight"></p>
                     </div>

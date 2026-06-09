@@ -1,0 +1,148 @@
+dialog {
+  flex-wrap: wrap;
+  justify-content: center;
+  border: none;
+  background-color: white;
+  width: 350px;
+  height: 600px;
+  border-radius: 40px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  position: fixed;
+  padding: 0;
+}
+
+dialog.opened {
+  border: none;
+  transition: all 2s ease-in;
+  width: 350px;
+  height: 600px;
+  border-radius: 40px;
+  overflow: hidden;
+  animation: myAnim 1s ease-in-out 0s 1 normal forwards;
+  padding: 0;
+}
+
+@keyframes myAnim {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+dialog::backdrop {
+  opacity: 0;
+  background-color: black;
+  transition: all 250ms ease-in;
+}
+
+dialog.opened::backdrop {
+  opacity: 0.5;
+  background-color: black;
+  transition: all 250ms ease-in;
+}
+
+.detail_head {
+  display: flex;
+  justify-content: center;
+  height: 150px;
+}
+
+.detail_sprite > img {
+  width: 123px;
+  height: 120px;
+  transform: translateX(15px);
+}
+
+.cry_btn {
+  width: 24px;
+  height: 24px;
+  align-self: flex-end;
+  transform: translateX(70px);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.dialog_types {
+  display: flex;
+  gap: 8px;
+}
+
+.detail_pkm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.detail_pkm > h2 {
+  padding: 6px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail_description {
+  padding: 6px;
+  text-align: center;
+}
+
+.measures {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px;
+}
+
+.measures_style {
+  width: 70px;
+  height: 40px;
+  background: #e0dbcc;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid black;
+  border-radius: 12px;
+
+  /* https://smoothshadows.com/#djEsMSw1LDAuMjYsMTAsMywwLCMwMzA3MTIsI2YzZjRmNiwjZmZmZmZmLDI%3D */
+  box-shadow:
+    0px 0px 0px rgba(3, 7, 18, 0.05),
+    0px 0px 2px rgba(3, 7, 18, 0.1),
+    0px 1px 4px rgba(3, 7, 18, 0.16),
+    0px 2px 6px rgba(3, 7, 18, 0.21),
+    0px 3px 10px rgba(3, 7, 18, 0.26);
+}
+
+.stat_block {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  padding: 8px;
+}
+
+.evolution {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}

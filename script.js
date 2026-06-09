@@ -43,6 +43,7 @@ async function bulkLoadNextPokemon() {
   const renderFrom = pokemonInfos.length;
   if (isLoading) return;
   isLoading = true;
+  document.querySelector(".load_more button").disabled = true;
   document.getElementById("loader").style.display = "flex";
   const promises = [];
   for (let pokeID = START; pokeID < STOP; pokeID++) {
@@ -63,6 +64,7 @@ async function bulkLoadNextPokemon() {
   STOP += 20;
   renderPokemonCard(renderFrom);
   document.getElementById("loader").style.display = "none";
+  document.querySelector(".load_more button").disabled = false;
   isLoading = false;
 }
 
