@@ -50,23 +50,52 @@ dialog.opened::backdrop {
   transition: all 250ms ease-in;
 }
 
+.dialog_headline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+}
+
+.dialog_headline > p {
+  font-size: 1.2rem;
+}
+
+.dialog_headline > h2 {
+  font-size: 2rem;
+}
+
 .detail_head {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   height: 150px;
+  background-image: url(../assets/icons/pokeball-icon\ 1.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-position-x: 230px;
+  background-position-y: 30px;
+  background-blend-mode: soft-light;
+}
+
+.dialog_imgs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .detail_sprite > img {
   width: 123px;
   height: 120px;
-  transform: translateX(15px);
+  transform: translate(35px, 5px);
 }
 
 .cry_btn {
   width: 24px;
   height: 24px;
   align-self: flex-end;
-  transform: translateX(70px);
+  transform: translate(-43px, -63px);
   cursor: pointer;
   border: none;
   background: none;
@@ -77,13 +106,17 @@ dialog.opened::backdrop {
   gap: 8px;
 }
 
+.detail_body {
+  background-color: white;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
 .detail_pkm {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
+  padding: 16px 8px 8px;
 }
 
 .detail_pkm > h2 {
@@ -130,19 +163,27 @@ dialog.opened::backdrop {
 }
 
 .stat_block {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 160px;
+  max-height: 250px;
+  scale: 1.25;
+  
 }
 
-table {
+.stat_chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 8px;
+  max-height: 250px;
+  padding: 0 20px 0 0;
 }
 
 .evolution {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 8px;
+  gap: 16px;
 }

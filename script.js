@@ -13,12 +13,13 @@ let imageCache = {};
 async function init() {
   await bulkLoadPokemon();
   console.log(pokemonInfos);
-  console.log(pokemonCharacteristics);  
+  console.log(pokemonCharacteristics);
 }
 
 async function bulkLoadPokemon() {
-  document.getElementById("loader").style.display = "flex";
   const promises = [];
+  if (isLoading) return;
+  setMoreBtn(true);
   for (let pokeID = 1; pokeID <= 20; pokeID++) {
     promises.push(
       Promise.all([
@@ -28,23 +29,17 @@ async function bulkLoadPokemon() {
       ]),
     );
   }
-  const results = await Promise.all(promises);
-  for (const [info, description] of results) {
-    pokemonInfos.push(info);
-    pokemonCharacteristics.push(description);
-  }
+  await fetchAndStore(promises);
   START += 20;
   STOP += 20;
   renderPokemonCard();
-  document.getElementById("loader").style.display = "none";
+  setMoreBtn(false);
 }
 
 async function bulkLoadNextPokemon() {
   const renderFrom = pokemonInfos.length;
   if (isLoading) return;
-  isLoading = true;
-  document.querySelector(".load_more button").disabled = true;
-  document.getElementById("loader").style.display = "flex";
+  setMoreBtn(true);
   const promises = [];
   for (let pokeID = START; pokeID < STOP; pokeID++) {
     promises.push(
@@ -55,17 +50,26 @@ async function bulkLoadNextPokemon() {
       ]),
     );
   }
+  await fetchAndStore(promises);
+  START += 20;
+  STOP += 20;
+  renderPokemonCard(renderFrom);
+  setMoreBtn(false);
+}
+
+async function fetchAndStore(promises) {
   const results = await Promise.all(promises);
   for (const [info, description] of results) {
     pokemonInfos.push(info);
     pokemonCharacteristics.push(description);
   }
-  START += 20;
-  STOP += 20;
-  renderPokemonCard(renderFrom);
-  document.getElementById("loader").style.display = "none";
-  document.querySelector(".load_more button").disabled = false;
-  isLoading = false;
+  return results;
+}
+
+function setMoreBtn(loading) {
+  isLoading = loading;
+  document.querySelector(".load_more button").disabled = loading;
+  document.getElementById("loader").classList.toggle("d_none", !loading);
 }
 
 async function loadPokemonInfo(pokeID) {
@@ -138,7 +142,6 @@ function renderTypes(i) {
   }
 }
 
-
 function openDetails(i) {
   const detailRef = document.getElementById("details");
   detailRef.showModal();
@@ -191,14 +194,11 @@ function renderWeight(i) {
   weightRef.innerHTML = weight;
 }
 
-function renderTable(i) {
-  const tableRef = document.getElementById("table");
-  tableRef.innerHTML = getTableTemplate(i);
-}
-
 async function renderEvolutionChain(i) {
   let pokeId = i + 1;
-  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,);
+  const speciesRes = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
+  );
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
   const chain = (await evoRes.json()).chain;
@@ -230,7 +230,7 @@ function renderDialogContent(i) {
   renderDialogDescription(i);
   renderHeight(i);
   renderWeight(i);
-  renderTable(i);
+  renderStatChart(i);
   renderEvolutionChain(i);
 }
 
@@ -261,4 +261,68 @@ function playPokemonCry(i) {
   const url = pokemonInfos[i].cries.latest;
   const audio = new Audio(url);
   audio.play();
+}
+
+function renderStatChart(i) {
+  const ctx = document.getElementById(`myChart${i}`);
+  Chart.getChart(ctx)?.destroy();
+
+  const names = pokemonInfos[i].stats.map((s) =>
+    s.stat.name
+      .replace("special-attack", "S.Attack")
+      .replace("special-defense", "S.Defense")
+      .toUpperCase(),
+  );
+  const stats = pokemonInfos[i].stats.map((s) => s.base_stat);
+  new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels: names,
+      datasets: [
+        {
+          label: "",
+          data: stats,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      layout: {
+        padding: {
+          left: 35,
+          right: 35,
+          top: 10,
+          bottom: 10,
+        },
+      },
+      maintainAspectRatio: true,
+      responsive: true,
+      scales: {
+        r: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 50,
+            backdropColor: "transparent",
+            color: "#666",
+            display: false,
+          },
+          grid: {
+            color: "rgba(0,0,0,0.15)",
+          },
+          angleLines: {
+            color: "rgba(0,0,0,0.15)",
+          },
+          pointLabels: {
+            color: "#333",
+            font: { size: 9, weight: "bold", family: "Pixelify Sans" },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    },
+  });
 }

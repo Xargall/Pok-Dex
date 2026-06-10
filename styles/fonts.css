@@ -1,42 +1,33 @@
-/* kumbh-sans-regular - latin */
+/* pixelify-sans-regular - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Kumbh Sans';
+  font-family: "Pixelify Sans";
   font-style: normal;
   font-weight: 400;
-  src: url('./assets/fonts/kumbh-sans-v27-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../assets/fonts/pixelify-sans-v3-latin-regular.woff2")
+    format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-/* kumbh-sans-700 - latin */
+/* pixelify-sans-500 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Kumbh Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: url('./assets/fonts/kumbh-sans-v27-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-
-/* inter-regular - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  src: url('./assets/fonts/inter-v20-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-}
-/* inter-500 - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Inter';
+  font-family: "Pixelify Sans";
   font-style: normal;
   font-weight: 500;
-  src: url('./assets/fonts/inter-v20-latin-500.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../assets/fonts/pixelify-sans-v3-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-
-/* press-start-2p-regular - latin */
+/* pixelify-sans-600 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Press Start 2P';
+  font-family: "Pixelify Sans";
   font-style: normal;
-  font-weight: 400;
-  src: url('../assets/fonts/press-start-2p-v16-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  font-weight: 600;
+  src: url("../assets/fonts/pixelify-sans-v3-latin-600.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* pixelify-sans-700 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../assets/fonts/pixelify-sans-v3-latin-700.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
