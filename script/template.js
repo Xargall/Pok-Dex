@@ -29,7 +29,10 @@ function getTypesTemplate(i, index) {
 
 function getDialogTemplate(i) {
   return /*html*/ `
-        <section class="detail_view ${pokemonInfos[i].types[0].type.name}" onclick="bubbleProtection(event)">
+    <div onclick="bubbleProtection(event)">
+        <button class="dialog_prev" onclick="switchPokemon(${i} - 1)" ${i === 0 ? "disabled" : ""}>‹</button>
+        <button class="dialog_next" onclick="switchPokemon(${i} + 1)" ${i === pokemonInfos.length - 1 ? "disabled" : ""}>›</button>
+        <section class="detail_view ${pokemonInfos[i].types[0].type.name}">
             <div class="detail_head ${pokemonInfos[i].types[0].type.name} ">
                 <div class="dialog_headline">
                     <h2 id="dialog_name${i}"></h2>
@@ -57,7 +60,7 @@ function getDialogTemplate(i) {
                         </div>
                     </div>
                     <div class="stat_chart">
-                        <canvas class="stat_block" id="myChart${i}">
+                        <canvas class="stat_block stat_canvas">
                         </canvas>    
                     </div>            
                 </div>
@@ -65,7 +68,6 @@ function getDialogTemplate(i) {
             </div>
             
         </section>
+</div>    
     `;
 }
-
-

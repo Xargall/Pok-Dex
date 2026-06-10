@@ -2,6 +2,8 @@ let START = 1;
 let STOP = START + 20;
 let isLoading = false;
 
+let currentIndex = 0;
+
 let pokemonInfos = [];
 
 let pokemonCharacteristics = [];
@@ -143,6 +145,7 @@ function renderTypes(i) {
 }
 
 function openDetails(i) {
+  currentIndex = i;
   const detailRef = document.getElementById("details");
   detailRef.showModal();
   detailRef.classList.add("opened");
@@ -264,7 +267,7 @@ function playPokemonCry(i) {
 }
 
 function renderStatChart(i) {
-  const ctx = document.getElementById(`myChart${i}`);
+  const ctx = document.querySelector(".stat_canvas");
   Chart.getChart(ctx)?.destroy();
 
   const names = pokemonInfos[i].stats.map((s) =>
@@ -296,7 +299,7 @@ function renderStatChart(i) {
         },
       },
       maintainAspectRatio: true,
-      responsive: true,
+      responsive: false,
       scales: {
         r: {
           beginAtZero: true,
@@ -325,4 +328,11 @@ function renderStatChart(i) {
       },
     },
   });
+}
+
+function switchPokemon(i) {
+  currentIndex = i;
+  const detailRef = document.getElementById("details");
+  detailRef.innerHTML = getDialogTemplate(i);
+  renderDialogContent(i);
 }

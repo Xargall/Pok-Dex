@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   justify-content: center;
   padding: 50px 100px;
-  background: #a4121c;
+  background: #6b0d14;
 }
 
 .card_section {
@@ -54,12 +54,8 @@
   border-radius: 25px;
   line-height: 120%;
 
-  box-shadow:
-    0px 0px 1px rgba(3, 7, 18, 0.07),
-    0px 0px 3px rgba(3, 7, 18, 0.13),
-    0px 1px 6px rgba(3, 7, 18, 0.2),
-    0px 2px 11px rgba(3, 7, 18, 0.26),
-    0px 3px 17px rgba(3, 7, 18, 0.33);
+  /* https://smoothshadows.com/#djEsMSwxLDAuNTYsMTAsMCwwLCMwMzA3MTIsI2YzZjRmNiwjZmZmZmZmLDI%3D */
+  box-shadow: 0px 0px 10px rgba(3, 7, 18, 0.56);
 }
 
 .card_body {
@@ -86,7 +82,7 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: #a4121c;
+  background: #6b0d14;
 }
 
 .evolution img {
@@ -98,7 +94,7 @@
   display: flex;
   justify-content: center;
   padding: 70px;
-  background: #a4121c;
+  background: #6b0d14;
 }
 
 /*#region loader */
@@ -109,7 +105,7 @@
 .wrapper {
   position: absolute;
   left: 50%;
-  background: #a4121c;
+  background: #6b0d14;
   transform: translate(-50%, -50%);
 }
 
