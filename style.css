@@ -251,8 +251,8 @@
 /*#endregion */
 
 .load_more button {
-  background: black;
-  color: #fff;
+  background: #cdc9c9;
+  color: black;
   font-family: "Pixelify Sans", sans-serif;
   font-size: 18px;
   letter-spacing: 1px;
@@ -261,7 +261,7 @@
   padding: 16px 48px;
   cursor: pointer;
   box-shadow:
-    0 6px 0 #6b0b12,
+    0 6px 0 black,
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition:
     transform 0.08s,
