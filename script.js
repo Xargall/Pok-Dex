@@ -91,10 +91,10 @@ async function loadPokemonInfo(pokeID) {
 }
 
 async function getPkmDescription(pokeID) {
-  let url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
-  let characteristics = await fetch(url);
-  let characteristicsAsJSON = await characteristics.json();
-  return characteristicsAsJSON;
+  const url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
+  const response = await fetch(url);
+  if (!response.ok) return null; 
+  return await response.json();
 }
 
 function getFrontPicture(pokeID) {
@@ -297,28 +297,37 @@ function searchLocally(input, cardRef) {
 }
 
 async function searchGlobally(input, cardRef) {
-  const match = allPokemonList.find(
+  const matches = allPokemonList.filter(
     (p) => p.name.includes(input) || p.url.includes(`/pokemon/${input}/`),
   );
-  if (!match) {
+  if (matches.length === 0) {
     cardRef.innerHTML = `<p>No Pokémon found for "${input}"</p>`;
     return;
   }
-  await fetchAndRenderSearchResult(match, cardRef);
+  await fetchAndRenderSearchResult(matches, cardRef);
 }
 
-async function fetchAndRenderSearchResult(match, cardRef) {
-  const [info, description] = await Promise.all([
-    fetch(match.url).then((r) => r.json()),
-    getPkmDescription(match.name),
-  ]);
-  await getFrontPicture(info.id);
-  searchResults = [info];
-  searchDescriptions = [description];
+async function fetchAndRenderSearchResult(matches, cardRef) {
+  const results = (await Promise.all(
+    matches.map((match) =>
+      Promise.all([
+        fetch(match.url).then((r) => r.json()),
+        getPkmDescription(match.name),
+      ]),
+    ),
+  )).filter(([, description]) => description !== null);
+
+  searchResults = results.map(([info]) => info);
+  searchDescriptions = results.map(([, description]) => description);
+
+  await Promise.all(searchResults.map((info) => getFrontPicture(info.id)));
+
   isSearchMode = true;
-  cardRef.innerHTML = getPokemonCardTemplate(0, true);
-  renderCardContent(0, info.id, true);
-  console.log(searchResults);
+  cardRef.innerHTML = "";
+  searchResults.forEach((_, i) => {
+    cardRef.innerHTML += getPokemonCardTemplate(i, true);
+    renderCardContent(i, searchResults[i].id, true);
+  });
 }
 
 function playPokemonCry(i, fromSearch = false) {
