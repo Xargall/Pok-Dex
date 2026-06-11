@@ -34,8 +34,8 @@ function getDialogTemplate(i, fromSearch = false) {
   const source = fromSearch ? searchResults : pokemonInfos;
   return /*html*/ `
     <div onclick="bubbleProtection(event)">
-        <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 ? "disabled" : ""}>‹</button>
-        <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 ? "disabled" : ""}>›</button>
+        <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 || fromSearch ? "disabled" : ""}>‹</button>
+        <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 || fromSearch ? "disabled" : ""}>›</button>
         <section class="detail_view ${source[i].types[0].type.name}">
             <div class="detail_head ${source[i].types[0].type.name} ">
                 <div class="dialog_headline">

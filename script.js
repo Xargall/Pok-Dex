@@ -93,7 +93,7 @@ async function loadPokemonInfo(pokeID) {
 async function getPkmDescription(pokeID) {
   const url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
   const response = await fetch(url);
-  if (!response.ok) return null; 
+  if (!response.ok) return null;
   return await response.json();
 }
 
@@ -191,9 +191,10 @@ function renderDialogTypes(i, source = pokemonInfos) {
 function renderDialogDescription(i, source = pokemonInfos) {
   const descRef = document.getElementById(`dialog_description${i}`);
   descRef.innerHTML = "";
-  let characteristicsDisplay = source[i].flavor_text_entries[2].flavor_text;
-  let newDescription = characteristicsDisplay.replace(/[\f\r\n\t]/g, " ");
-  descRef.innerHTML = newDescription;
+  const entries = source[i].flavor_text_entries;
+  const entry = entries.find((e) => e.language.name === "en"); 
+  if (!entry) return;
+  descRef.innerHTML = entry.flavor_text.replace(/[\f\r\n\t]/g, " ");
 }
 
 function renderHeight(i, source = pokemonInfos) {
@@ -308,14 +309,16 @@ async function searchGlobally(input, cardRef) {
 }
 
 async function fetchAndRenderSearchResult(matches, cardRef) {
-  const results = (await Promise.all(
-    matches.map((match) =>
-      Promise.all([
-        fetch(match.url).then((r) => r.json()),
-        getPkmDescription(match.name),
-      ]),
-    ),
-  )).filter(([, description]) => description !== null);
+  const results = (
+    await Promise.all(
+      matches.map((match) =>
+        Promise.all([
+          fetch(match.url).then((r) => r.json()),
+          getPkmDescription(match.name),
+        ]),
+      ),
+    )
+  ).filter(([, description]) => description !== null);
 
   searchResults = results.map(([info]) => info);
   searchDescriptions = results.map(([, description]) => description);
@@ -403,6 +406,7 @@ function renderStatChart(i) {
 }
 
 function switchPokemon(i, fromSearch = false) {
+  const isFromSearch = fromSearch === true || fromSearch === "true";
   currentIndex = i;
   const detailRef = document.getElementById("details");
   detailRef.innerHTML = getDialogTemplate(i, fromSearch);
