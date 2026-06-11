@@ -125,6 +125,7 @@ function renderCardContent(i, pokeID) {
 function renderPicture(i, pokeID) {
   const img = new Image();
   img.src = imageCache[pokeID];
+  img.alt = pokemonInfos[i].name;
   let imgContainer = document.getElementById(`pokemonImg${i}`);
   imgContainer.appendChild(img);
 }
@@ -250,8 +251,13 @@ function closeDetails() {
 function searchPokemon() {
   const input = document.querySelector("input").value.toLowerCase();
   const cardRef = document.getElementById("content");
+  const loadMoreBtn = document.querySelector(".load_more button");
   cardRef.innerHTML = "";
-  if (input.length === 0) return renderPokemonCard(0);
+  if (input.length === 0) {
+    loadMoreBtn.disabled = false;
+    return renderPokemonCard(0);
+  }
+  loadMoreBtn.disabled = true;
   const filtered = pokemonInfos.filter((p) => p.name.includes(input));
   filtered.forEach((p) => {
     const index = pokemonInfos.indexOf(p);

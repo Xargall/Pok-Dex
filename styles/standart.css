@@ -7,12 +7,15 @@
 html {
   font-size: 16px;
   font-family: "Pixelify Sans";
-  
 }
 
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 .normal {
-  
   background: #a8a77a;
 }
 .fire {

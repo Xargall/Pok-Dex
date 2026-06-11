@@ -10,7 +10,7 @@ function getPokemonCardTemplate(i) {
                     <div id="types${i}" class="types"></div>
                     <div class="poke_box" onclick="openDetails(${i})">
                         <div class="pokeball">
-                            <button  class="more_btn pokeball__button"></button>
+                            <button  class="more_btn pokeball__button" aria-label="open_details"></button>
                         </div>   
                     </div>
                     

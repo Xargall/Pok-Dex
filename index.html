@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./styles/fonts.css" />
     <link rel="stylesheet" href="./styles/standart.css" />
     <link rel="stylesheet" href="./styles/modal.css" />
+    <link rel="stylesheet" href="./styles/mediaqueries.css">
     <link
       rel="shortcut icon"
       href="./assets/icons/favicon.svg"
@@ -17,28 +18,46 @@
     <script src="./script/template.js"></script>
   </head>
   <body onload="init()">
-    <header>
-      <section>
-        <img src="./assets/imgs/pokédex.png" alt="" /><input
+    <header class="pokemon_box">
+      <section class="headline">
+        <h1># PokeDex</h1>
+        <input
           type="text"
-          oninput="searchPokemon()" />
+          oninput="searchPokemon()"
+          placeholder="   Search by Name..." />
       </section>
     </header>
     <main id="content" class="main_content"></main>
     <div class="center d_none" id="loader">
       <div class="wrapper">
         <div class="pokeball_load"></div>
-        </div>
-
-        <div class="eye"></div>
       </div>
+      <div class="eye"></div>
     </div>
     <div class="load_more">
       <button id="loadMoreBtn" onclick="bulkLoadNextPokemon()">
         Show More!
       </button>
     </div>
-    <footer></footer>
+    <footer>
+      <div class="battle">
+        <img src="./assets/imgs/Type=Gym 2.png" alt="" class="img_01" />
+        <div class="build_up">
+          <img
+            src="./assets/imgs/Character=Gary, Steps=1, Orientation=-_ Right.png"
+            alt="" />
+          <img
+            src="./assets/imgs/Pokemon=0003 - Venusaur, Steps=4, Orientation=-_ Right.png"
+            alt="" />
+          <img
+            src="./assets/imgs/Pokemon=0006 - Charizard, Steps=1, Orientation=_- Left.png"
+            alt="" />
+          <img
+            src="./assets/imgs/Character=Red, Steps=1, Orientation=_- Left.png"
+            alt="" />
+        </div>
+      </div>
+    </footer>
     <dialog id="details" onclick="closeDetails()"></dialog>
   </body>
 </html>
