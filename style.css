@@ -379,8 +379,9 @@ footer {
   background-blend-mode: soft-light;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   overflow: hidden;
+  padding: 0 50px;
 }
 
 .battle {
