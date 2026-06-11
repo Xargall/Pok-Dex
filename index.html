@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./styles/fonts.css" />
     <link rel="stylesheet" href="./styles/standart.css" />
     <link rel="stylesheet" href="./styles/modal.css" />
-    <link rel="stylesheet" href="./styles/mediaqueries.css">
+    <link rel="stylesheet" href="./styles/mediaqueries.css" />
     <link
       rel="shortcut icon"
       href="./assets/icons/Type=Poké Ball.png"
@@ -21,10 +21,14 @@
     <header class="pokemon_box">
       <section class="headline">
         <h1># PokeDex</h1>
-        <input
-          type="text"
-          oninput="searchPokemon()"
-          placeholder="   Search by Name..." />
+        <div class="search_wrapper">
+          <input
+            type="text"
+            oninput="searchPokemon()"
+            placeholder="Search by Name..."
+            id="searchInput" />
+          <button onclick="resetSearch()">✕</button>
+        </div>
       </section>
     </header>
     <main id="content" class="main_content"></main>

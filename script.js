@@ -264,6 +264,11 @@ function searchPokemon() {
   });
 }
 
+function resetSearch() {
+  document.getElementById("searchInput").value = "";
+  searchPokemon();
+}
+
 function playPokemonCry(i) {
   const url = pokemonInfos[i].cries.latest;
   const audio = new Audio(url);

@@ -173,7 +173,7 @@
   border-radius: 50%;
   overflow: hidden;
   box-shadow: inset -10px 10px 0 10px #ccc;
-  animation: shake 1.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+  animation: shake 1.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
   animation-play-state: paused;
 }
 
@@ -321,6 +321,30 @@
 
 .headline h1 {
   font-size: 5rem;
+}
+
+.search_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search_wrapper button {
+  background: #a4121c;
+  color: #fff;
+  font-family: "Pixelify Sans", sans-serif;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #6b0b12;
+  font-size: 14px;
+}
+
+.search_wrapper button:active {
+  transform: translateY(3px);
+  box-shadow: 0 0px 0 #6b0b12;
 }
 
 input {
