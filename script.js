@@ -14,8 +14,6 @@ let imageCache = {};
 
 async function init() {
   await bulkLoadPokemon();
-  console.log(pokemonInfos);
-  console.log(pokemonCharacteristics);
 }
 
 async function bulkLoadPokemon() {
