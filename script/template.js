@@ -1,14 +1,15 @@
-function getPokemonCardTemplate(i) {
+function getPokemonCardTemplate(i, fromSearch = false) {
+  const source = fromSearch ? searchResults : pokemonInfos;
   return /*html*/ `
         <section class="card_section">
             <div class="card_head">
                 <h3 id="pkm_name${i}"></h3>
-                <p>#${String(pokemonInfos[i].id).padStart(3, "0")}</p>
+                <p>#${String(source[i].id).padStart(3, "0")}</p>
             </div>
             <div class="card_body">
                 <div class="body_left">
                     <div id="types${i}" class="types"></div>
-                    <div class="poke_box" onclick="openDetails(${i})">
+                    <div class="poke_box" onclick="openDetails(${i}, ${fromSearch})">
                         <div class="pokeball">
                             <button  class="more_btn pokeball__button" aria-label="open_details"></button>
                         </div>   
@@ -21,26 +22,29 @@ function getPokemonCardTemplate(i) {
     `;
 }
 
-function getTypesTemplate(i, index) {
+function getTypesTemplate(i, index, source = pokemonInfos) {
+  const typeName = source[i].types[index].type.name;
+  const capitalizedType = typeName.charAt(0).toUpperCase() + typeName.slice(1);
   return /*html*/ `
-    <div class="${pokemonInfos[i].types[index].type.name} type_tag">${pokemonInfos[i].types[index].type.name.charAt(0).toUpperCase() + pokemonInfos[i].types[index].type.name.slice(1)}</div>
-`;
+    <div class="${typeName} type_tag">${capitalizedType}</div>
+  `;
 }
 
-function getDialogTemplate(i) {
+function getDialogTemplate(i, fromSearch = false) {
+  const source = fromSearch ? searchResults : pokemonInfos;
   return /*html*/ `
     <div onclick="bubbleProtection(event)">
-        <button class="dialog_prev" onclick="switchPokemon(${i} - 1)" ${i === 0 ? "disabled" : ""}>‹</button>
-        <button class="dialog_next" onclick="switchPokemon(${i} + 1)" ${i === pokemonInfos.length - 1 ? "disabled" : ""}>›</button>
-        <section class="detail_view ${pokemonInfos[i].types[0].type.name}">
-            <div class="detail_head ${pokemonInfos[i].types[0].type.name} ">
+        <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 ? "disabled" : ""}>‹</button>
+        <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 ? "disabled" : ""}>›</button>
+        <section class="detail_view ${source[i].types[0].type.name}">
+            <div class="detail_head ${source[i].types[0].type.name} ">
                 <div class="dialog_headline">
                     <h2 id="dialog_name${i}"></h2>
-                    <p>#${String(pokemonInfos[i].id).padStart(3, "0")}</p>
+                    <p>#${String(source[i].id).padStart(3, "0")}</p>
                 </div>
                 <div class="dialog_imgs">      
                     <div id="dialog_pokemonImg${i}" class="detail_sprite"></div>
-                    <button class="cry_btn" onclick="playPokemonCry(${i})"><img src="../assets/icons/Professor Oak.png" alt=""></button>
+                    <button class="cry_btn" onclick="playPokemonCry(${i}, ${fromSearch})"><img src="./assets/icons/Professor Oak.png" alt=""></button>
                 </div>    
             </div>
             <div class="detail_body"> 

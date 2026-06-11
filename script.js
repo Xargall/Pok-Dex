@@ -4,6 +4,8 @@ let isLoading = false;
 
 let currentIndex = 0;
 
+let allPokemonList = [];
+
 let pokemonInfos = [];
 
 let pokemonCharacteristics = [];
@@ -13,6 +15,7 @@ let pokemonCry = [];
 let imageCache = {};
 
 async function init() {
+  await fetchAllPokemonNames();
   await bulkLoadPokemon();
 }
 
@@ -34,6 +37,14 @@ async function bulkLoadPokemon() {
   STOP += 20;
   renderPokemonCard();
   setMoreBtn(false);
+}
+
+async function fetchAllPokemonNames() {
+  const response = await fetch(
+    "https://pokeapi.co/api/v2/pokemon?limit=100000",
+  );
+  const data = await response.json();
+  allPokemonList = data.results;
 }
 
 async function bulkLoadNextPokemon() {
@@ -114,10 +125,11 @@ function renderPokemonCard(startIndex = 0) {
   }
 }
 
-function renderCardContent(i, pokeID) {
+function renderCardContent(i, pokeID, fromSearch = false) {
+  const source = fromSearch ? searchResults : pokemonInfos;
+  renderName(i, source);
+  renderTypes(i, source);
   renderPicture(i, pokeID);
-  renderName(i);
-  renderTypes(i);
 }
 
 function renderPicture(i, pokeID) {
@@ -128,76 +140,76 @@ function renderPicture(i, pokeID) {
   imgContainer.appendChild(img);
 }
 
-function renderName(i) {
+function renderName(i, source = pokemonInfos) {
   let pkmNameRef = document.getElementById(`pkm_name${i}`);
-  const word = pokemonInfos[i].name;
+  const word = source[i].name;
   const capitalizedName = word.charAt(0).toUpperCase() + word.slice(1);
   pkmNameRef.innerHTML = capitalizedName;
 }
 
-function renderTypes(i) {
+function renderTypes(i, source = pokemonInfos) {
   const typeRef = document.getElementById(`types${i}`);
-  let typeArray = pokemonInfos[i].types;
+  let typeArray = source[i].types;
   for (let index = 0; index < typeArray.length; index++) {
-    typeRef.innerHTML += getTypesTemplate(i, index);
+    typeRef.innerHTML += getTypesTemplate(i, index, source);
   }
 }
 
-function openDetails(i) {
+function openDetails(i, fromSearch = false) {
   currentIndex = i;
+  isSearchMode = fromSearch;
   const detailRef = document.getElementById("details");
   detailRef.showModal();
   detailRef.classList.add("opened");
-  detailRef.innerHTML = getDialogTemplate(i);
-  renderDialogContent(i);
+  detailRef.innerHTML = getDialogTemplate(i, fromSearch);
+  renderDialogContent(i, fromSearch);
 }
 
-function renderDialogPicture(i) {
+function renderDialogPicture(i, source = pokemonInfos) {
   const img = new Image();
-  const pokeID = i + 1;
+  const pokeID = source[i].id;
   img.src = imageCache[pokeID];
   let imgContainer = document.getElementById(`dialog_pokemonImg${i}`);
   imgContainer.appendChild(img);
 }
 
-function renderDialogName(i) {
+function renderDialogName(i, source = pokemonInfos) {
   let pkmNameRef = document.getElementById(`dialog_name${i}`);
-  const word = pokemonInfos[i].name;
+  const word = source[i].name;
   const capitalizedName = word.charAt(0).toUpperCase() + word.slice(1);
   pkmNameRef.innerHTML = capitalizedName;
 }
 
-function renderDialogTypes(i) {
+function renderDialogTypes(i, source = pokemonInfos) {
   const typeRef = document.getElementById(`dialog_types${i}`);
-  let typeArray = pokemonInfos[i].types;
+  let typeArray = source[i].types;
   for (let index = 0; index < typeArray.length; index++) {
-    typeRef.innerHTML += getTypesTemplate(i, index);
+    typeRef.innerHTML += getTypesTemplate(i, index, source);
   }
 }
 
-function renderDialogDescription(i) {
+function renderDialogDescription(i, source = pokemonInfos) {
   const descRef = document.getElementById(`dialog_description${i}`);
   descRef.innerHTML = "";
-  let characteristicsDisplay =
-    pokemonCharacteristics[i].flavor_text_entries[2].flavor_text;
+  let characteristicsDisplay = source[i].flavor_text_entries[2].flavor_text;
   let newDescription = characteristicsDisplay.replace(/[\f\r\n\t]/g, " ");
   descRef.innerHTML = newDescription;
 }
 
-function renderHeight(i) {
+function renderHeight(i, source = pokemonInfos) {
   const heightRef = document.getElementById("height");
-  const height = (pokemonInfos[i].height / 10).toFixed(1) + "m";
+  const height = (source[i].height / 10).toFixed(1) + "m";
   heightRef.innerHTML = height;
 }
 
-function renderWeight(i) {
+function renderWeight(i, source = pokemonInfos) {
   const weightRef = document.getElementById("weight");
-  const weight = (pokemonInfos[i].weight / 10).toFixed(1) + "Kg";
+  const weight = (source[i].weight / 10).toFixed(1) + "Kg";
   weightRef.innerHTML = weight;
 }
 
-async function renderEvolutionChain(i) {
-  let pokeId = i + 1;
+async function renderEvolutionChain(i, source = pokemonInfos) {
+  let pokeId = source[i].id;
   const speciesRes = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
   );
@@ -225,15 +237,17 @@ function evoImg(url) {
   return img;
 }
 
-function renderDialogContent(i) {
-  renderDialogPicture(i);
-  renderDialogName(i);
-  renderDialogTypes(i);
-  renderDialogDescription(i);
-  renderHeight(i);
-  renderWeight(i);
-  renderStatChart(i);
-  renderEvolutionChain(i);
+function renderDialogContent(i, fromSearch = false) {
+  const source = fromSearch ? searchResults : pokemonInfos;
+  const sourceDesc = fromSearch ? searchDescriptions : pokemonCharacteristics;
+  renderDialogPicture(i, source);
+  renderDialogName(i, source);
+  renderDialogTypes(i, source);
+  renderDialogDescription(i, sourceDesc);
+  renderHeight(i, source);
+  renderWeight(i, source);
+  renderStatChart(i, source);
+  renderEvolutionChain(i, source);
 }
 
 function bubbleProtection(event) {
@@ -246,31 +260,71 @@ function closeDetails() {
   detailRef.classList.remove("opened");
 }
 
-function searchPokemon() {
+async function searchPokemon() {
   const input = document.querySelector("input").value.toLowerCase();
   const cardRef = document.getElementById("content");
   const loadMoreBtn = document.querySelector(".load_more button");
   cardRef.innerHTML = "";
-  if (input.length === 0) {
-    loadMoreBtn.disabled = false;
-    return renderPokemonCard(0);
-  }
+
+  if (input.length === 0) return resetSearch(loadMoreBtn);
+
   loadMoreBtn.disabled = true;
-  const filtered = pokemonInfos.filter((p) => p.name.includes(input));
+  if (!searchLocally(input, cardRef)) await searchGlobally(input, cardRef);
+}
+
+function resetSearch() {
+  searchResults = [];
+  searchDescriptions = [];
+  isSearchMode = false;
+  document.querySelector(".load_more button").disabled = false;
+  document.querySelector("input").value = "";
+  document.getElementById("content").innerHTML = "";
+  renderPokemonCard(0);
+}
+
+function searchLocally(input, cardRef) {
+  const filtered = pokemonInfos.filter(
+    (p) => p.name.includes(input) || String(p.id) === input,
+  );
+  if (filtered.length === 0) return false;
+  isSearchMode = false;
   filtered.forEach((p) => {
     const index = pokemonInfos.indexOf(p);
     cardRef.innerHTML += getPokemonCardTemplate(index);
     renderCardContent(index, p.id);
   });
+  return true;
 }
 
-function resetSearch() {
-  document.getElementById("searchInput").value = "";
-  searchPokemon();
+async function searchGlobally(input, cardRef) {
+  const match = allPokemonList.find(
+    (p) => p.name.includes(input) || p.url.includes(`/pokemon/${input}/`),
+  );
+  if (!match) {
+    cardRef.innerHTML = `<p>No Pokémon found for "${input}"</p>`;
+    return;
+  }
+  await fetchAndRenderSearchResult(match, cardRef);
 }
 
-function playPokemonCry(i) {
-  const url = pokemonInfos[i].cries.latest;
+async function fetchAndRenderSearchResult(match, cardRef) {
+  const [info, description] = await Promise.all([
+    fetch(match.url).then((r) => r.json()),
+    getPkmDescription(match.name),
+  ]);
+  await getFrontPicture(info.id);
+  searchResults = [info];
+  searchDescriptions = [description];
+  isSearchMode = true;
+  cardRef.innerHTML = getPokemonCardTemplate(0, true);
+  renderCardContent(0, info.id, true);
+  console.log(searchResults);
+}
+
+function playPokemonCry(i, fromSearch = false) {
+  const source =
+    fromSearch === true || fromSearch === "true" ? searchResults : pokemonInfos;
+  const url = source[i].cries.latest;
   const audio = new Audio(url);
   audio.play();
 }
@@ -339,9 +393,9 @@ function renderStatChart(i) {
   });
 }
 
-function switchPokemon(i) {
+function switchPokemon(i, fromSearch = false) {
   currentIndex = i;
   const detailRef = document.getElementById("details");
-  detailRef.innerHTML = getDialogTemplate(i);
-  renderDialogContent(i);
+  detailRef.innerHTML = getDialogTemplate(i, fromSearch);
+  renderDialogContent(i, fromSearch);
 }
