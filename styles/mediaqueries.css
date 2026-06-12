@@ -36,4 +36,8 @@
   .mart {
     display: none;
   }
+
+  footer {
+    justify-content: center;
+  }
 }

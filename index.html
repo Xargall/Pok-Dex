@@ -22,12 +22,15 @@
       <section class="headline">
         <h1># PokeDex</h1>
         <div class="search_wrapper">
-          <input
-            type="text"
-            oninput="searchPokemon()"
-            placeholder="Search by Name or Number..."
-            id="searchInput" />
-          <button onclick="resetSearch()">✕</button>
+          <div>
+            <input
+              type="text"
+              oninput="searchPokemon()"
+              placeholder="Search by Name or Number..."
+              id="searchInput" />
+            <button onclick="resetSearch()">✕</button>
+          </div>
+          <small id="search_hint"></small>
         </div>
       </section>
     </header>

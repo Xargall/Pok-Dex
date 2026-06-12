@@ -192,7 +192,7 @@ function renderDialogDescription(i, source = pokemonInfos) {
   const descRef = document.getElementById(`dialog_description${i}`);
   descRef.innerHTML = "";
   const entries = source[i].flavor_text_entries;
-  const entry = entries.find((e) => e.language.name === "en"); 
+  const entry = entries.find((e) => e.language.name === "en");
   if (!entry) return;
   descRef.innerHTML = entry.flavor_text.replace(/[\f\r\n\t]/g, " ");
 }
@@ -265,10 +265,21 @@ async function searchPokemon() {
   const input = document.querySelector("input").value.toLowerCase();
   const cardRef = document.getElementById("content");
   const loadMoreBtn = document.querySelector(".load_more button");
+  const hint = document.getElementById("search_hint");
   cardRef.innerHTML = "";
-
-  if (input.length === 0) return resetSearch(loadMoreBtn);
-
+  if (input.length === 0) {
+    hint.innerHTML = "";
+    setMoreBtn(false);
+    return resetSearch(loadMoreBtn);
+  }
+  if (input.length < 3) {
+    hint.innerHTML = "Please enter at least 3 characters...";
+    cardRef.innerHTML = "";
+    setMoreBtn(true);
+    return;
+  }
+  hint.innerHTML = "";
+  setMoreBtn(false);
   loadMoreBtn.disabled = true;
   if (!searchLocally(input, cardRef)) await searchGlobally(input, cardRef);
 }
