@@ -110,6 +110,10 @@ dialog.opened::backdrop {
   background-color: white;
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .detail_pkm {
@@ -181,17 +185,33 @@ dialog.opened::backdrop {
 
 .evolution {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  flex-direction: column;
   padding: 8px;
   gap: 16px;
+  height: 350px;
+  overflow-y: auto;
+  width: 100%;
+  margin: 0;
+}
+
+.evo_row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.evo_row img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
 .dialog_prev,
 .dialog_next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 20px;
+  top: unset;
   background: #a4121c;
   color: #fff;
   font-family: "Pixelify Sans", sans-serif;
@@ -216,12 +236,59 @@ dialog.opened::backdrop {
 
 .dialog_prev:hover,
 .dialog_next:hover {
-  transform: translateY(calc(-50% - 2px));
+  transform: translateY(calc(-2px));
   box-shadow: 0 6px 0 #6b0b12;
 }
 
 .dialog_prev:active,
 .dialog_next:active {
-  transform: translateY(calc(-50% + 4px));
+  transform: translateY(4px);
   box-shadow: 0 1px 0 #6b0b12;
+}
+
+.tab_buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 60px;
+}
+
+.tab_btn {
+  background: #ddd;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-family: "Pixelify Sans", sans-serif;
+  cursor: pointer;
+}
+
+.tab_btn.active {
+  background: #a4121c;
+  color: white;
+}
+
+.dialog_controls {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.tab_content {
+  width: 100%;
+}
+
+.tab_content:not(.d_none) {
+  display: flex;
+  flex: 1;
+}
+
+#tab_content_evo:not(.d_none) {
+  align-items: center;
+  justify-content: center;
 }

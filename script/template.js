@@ -34,8 +34,12 @@ function getDialogTemplate(i, fromSearch = false) {
   const source = fromSearch ? searchResults : pokemonInfos;
   return /*html*/ `
     <div onclick="bubbleProtection(event)">
-        <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 || fromSearch ? "disabled" : ""}>‹</button>
-        <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 || fromSearch ? "disabled" : ""}>›</button>
+        <div class="dialog_controls">
+                    <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 || fromSearch ? "disabled" : ""}>‹</button>
+                    <button onclick="event.stopPropagation(); showTab('info', ${i}, ${fromSearch})" class="tab_btn active" id="tab_info">Info</button>
+                    <button onclick="event.stopPropagation(); showTab('evo', ${i}, ${fromSearch})" class="tab_btn" id="tab_evo">Evolution</button>
+                    <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 || fromSearch ? "disabled" : ""}>›</button>
+</div>
         <section class="detail_view ${source[i].types[0].type.name}">
             <div class="detail_head ${source[i].types[0].type.name} ">
                 <div class="dialog_headline">
@@ -51,27 +55,30 @@ function getDialogTemplate(i, fromSearch = false) {
                 <div class="detail_pkm">                                
                     <div id="dialog_types${i}" class="dialog_types"></div>
                 </div>
-                <div class="description">
-                    <article id="dialog_description${i}" class="detail_description"></article>
-                    <div class="measures">
-                        <div class="measures_style">
-                            <p>Height</p>
-                            <p id="height"></p>
-                        </div>
-                        <div class="measures_style">
-                            <p>Weight</p>
-                            <p id="weight"></p>
+                <div id="tab_content_info" class="tab_content">
+                    <div class="description">
+                        <article id="dialog_description${i}" class="detail_description"></article>
+                        <div class="measures">
+                            <div class="measures_style">
+                                <p>Height</p>
+                                <p id="height"></p>
+                            </div>
+                            <div class="measures_style">
+                                <p>Weight</p>
+                                <p id="weight"></p>
                         </div>
                     </div>
                     <div class="stat_chart">
-                        <canvas class="stat_block stat_canvas">
-                        </canvas>    
+                        <canvas class="stat_block stat_canvas"></canvas>    
                     </div>            
                 </div>
-                <div class="evolution" id="evoChain"></div>
+            </div>
+            <div id="tab_content_evo" class="tab_content d_none">
+                <div class="evolution center_evo" id="evoChain"></div>
+            </div>
             </div>
             
         </section>
-</div>    
+    </div>    
     `;
 }

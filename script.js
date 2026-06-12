@@ -17,6 +17,7 @@ let imageCache = {};
 async function init() {
   await fetchAllPokemonNames();
   await bulkLoadPokemon();
+  console.log(allPokemonList[0]);
 }
 
 async function bulkLoadPokemon() {
@@ -210,23 +211,42 @@ function renderWeight(i, source = pokemonInfos) {
 }
 
 async function renderEvolutionChain(i, source = pokemonInfos) {
-  let pokeId = source[i].id;
+  const pokeId = source[i].id;
+  const chain = await fetchEvoChain(pokeId);
+  const evoRef = document.getElementById("evoChain");
+  evoRef.innerHTML = "";
+  if (chain.evolves_to.length === 0) return (evoRef.innerHTML = "No Evolution");
+  chain.evolves_to.forEach((evo) =>
+    evoRef.appendChild(buildEvoRow(chain, evo)),
+  );
+}
+
+async function fetchEvoChain(pokeId) {
   const speciesRes = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
   );
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
-  const chain = (await evoRes.json()).chain;
-  const evoRef = document.getElementById("evoChain");
-  evoRef.innerHTML = "";
-  if (chain.evolves_to.length === 0) return (evoRef.innerHTML = "No Evolution");
-  evoRef.appendChild(evoImg(chain.species.url));
-  evoRef.innerHTML += " → ";
-  evoRef.appendChild(evoImg(chain.evolves_to[0].species.url));
-  if (chain.evolves_to[0].evolves_to.length > 0) {
-    evoRef.innerHTML += " → ";
-    evoRef.appendChild(evoImg(chain.evolves_to[0].evolves_to[0].species.url));
-  }
+  return (await evoRes.json()).chain;
+}
+
+function buildEvoRow(chain, evo) {
+  const row = document.createElement("div");
+  row.classList.add("evo_row");
+  row.appendChild(evoImg(chain.species.url));
+  row.appendChild(createArrow());
+  row.appendChild(evoImg(evo.species.url));
+  evo.evolves_to.forEach((evo2) => {
+    row.appendChild(createArrow());
+    row.appendChild(evoImg(evo2.species.url));
+  });
+  return row;
+}
+
+function createArrow() {
+  const span = document.createElement("span");
+  span.textContent = " → ";
+  return span;
 }
 
 function evoImg(url) {
@@ -236,6 +256,24 @@ function evoImg(url) {
     imageCache[id] ??
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
   return img;
+}
+
+function showTab(tab, i, fromSearch = false) {
+  const isFromSearch = fromSearch === true || fromSearch === "true";
+  const source = isFromSearch ? searchResults : pokemonInfos;
+  document
+    .getElementById("tab_content_info")
+    .classList.toggle("d_none", tab !== "info");
+  document
+    .getElementById("tab_content_evo")
+    .classList.toggle("d_none", tab !== "evo");
+  document.getElementById("evoChain").classList.toggle("d_none", tab !== "evo");
+  document
+    .getElementById("tab_info")
+    .classList.toggle("active", tab === "info");
+  document.getElementById("tab_evo").classList.toggle("active", tab === "evo");
+  document.getElementById("evoChain").classList.toggle("active", tab === "evo");
+  if (tab === "evo") renderEvolutionChain(i, source);
 }
 
 function playPokemonCry(i, fromSearch = false) {
@@ -275,13 +313,14 @@ async function searchPokemon() {
   const cardRef = document.getElementById("content");
   const loadMoreBtn = document.querySelector(".load_more button");
   const hint = document.getElementById("search_hint");
+  const isNumber = !isNaN(input) && input.trim() !== "";
   clearContent();
   if (input.length === 0) {
     hint.innerHTML = "";
     setMoreBtn(false);
     return resetSearch(loadMoreBtn);
   }
-  if (input.length < 3) {
+  if (!isNumber && input.length < 3) {
     hint.innerHTML = "Please enter at least 3 characters...";
     clearContent();
     setMoreBtn(true);
@@ -305,7 +344,7 @@ function resetSearch() {
 
 function searchLocally(input, cardRef) {
   const filtered = pokemonInfos.filter(
-    (p) => p.name.includes(input) || String(p.id) === input,
+    (p) => p.name.includes(input) || String(p.id) === String(Number(input)),
   );
   if (filtered.length === 0) return false;
   isSearchMode = false;
@@ -319,7 +358,8 @@ function searchLocally(input, cardRef) {
 
 async function searchGlobally(input, cardRef) {
   const matches = allPokemonList.filter(
-    (p) => p.name.includes(input) || p.url.includes(`/pokemon/${input}/`),
+    (p) =>
+      p.name.includes(input) || p.url.includes(`/pokemon/${Number(input)}/`),
   );
   if (matches.length === 0) {
     cardRef.innerHTML = `<p>No Pokémon found for "${input}"</p>`;
