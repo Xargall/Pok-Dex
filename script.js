@@ -238,6 +238,14 @@ function evoImg(url) {
   return img;
 }
 
+function playPokemonCry(i, fromSearch = false) {
+  const source =
+    fromSearch === true || fromSearch === "true" ? searchResults : pokemonInfos;
+  const url = source[i].cries.latest;
+  const audio = new Audio(url);
+  audio.play();
+}
+
 function renderDialogContent(i, fromSearch = false) {
   const source = fromSearch ? searchResults : pokemonInfos;
   const sourceDesc = fromSearch ? searchDescriptions : pokemonCharacteristics;
@@ -262,11 +270,11 @@ function closeDetails() {
 }
 
 async function searchPokemon() {
-  const input = document.querySelector("input").value.toLowerCase();
+  const input = document.getElementById("searchInput").value.toLowerCase();
   const cardRef = document.getElementById("content");
   const loadMoreBtn = document.querySelector(".load_more button");
   const hint = document.getElementById("search_hint");
-  cardRef.innerHTML = "";
+  clearContent();
   if (input.length === 0) {
     hint.innerHTML = "";
     setMoreBtn(false);
@@ -274,7 +282,7 @@ async function searchPokemon() {
   }
   if (input.length < 3) {
     hint.innerHTML = "Please enter at least 3 characters...";
-    cardRef.innerHTML = "";
+    clearContent();
     setMoreBtn(true);
     return;
   }
@@ -289,7 +297,7 @@ function resetSearch() {
   searchDescriptions = [];
   isSearchMode = false;
   document.querySelector(".load_more button").disabled = false;
-  document.querySelector("input").value = "";
+  document.getElementById("searchInput").value = "";
   document.getElementById("content").innerHTML = "";
   renderPokemonCard(0);
 }
@@ -342,14 +350,6 @@ async function fetchAndRenderSearchResult(matches, cardRef) {
     cardRef.innerHTML += getPokemonCardTemplate(i, true);
     renderCardContent(i, searchResults[i].id, true);
   });
-}
-
-function playPokemonCry(i, fromSearch = false) {
-  const source =
-    fromSearch === true || fromSearch === "true" ? searchResults : pokemonInfos;
-  const url = source[i].cries.latest;
-  const audio = new Audio(url);
-  audio.play();
 }
 
 function renderStatChart(i) {
@@ -422,4 +422,12 @@ function switchPokemon(i, fromSearch = false) {
   const detailRef = document.getElementById("details");
   detailRef.innerHTML = getDialogTemplate(i, fromSearch);
   renderDialogContent(i, fromSearch);
+}
+
+function clearContent() {
+  const loader = document.getElementById("loader");
+  const cardRef = document.getElementById("content");
+  cardRef.removeChild(loader);
+  cardRef.innerHTML = "";
+  cardRef.appendChild(loader);
 }

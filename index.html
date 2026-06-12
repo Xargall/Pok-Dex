@@ -22,7 +22,7 @@
       <section class="headline">
         <h1># PokeDex</h1>
         <div class="search_wrapper">
-          <div>
+          <div class="container">
             <input
               type="text"
               oninput="searchPokemon()"
@@ -34,13 +34,14 @@
         </div>
       </section>
     </header>
-    <main id="content" class="main_content"></main>
-    <div class="center d_none" id="loader">
-      <div class="wrapper">
-        <div class="pokeball_load"></div>
+    <main id="content" class="main_content">
+      <div class="center d_none" id="loader">
+        <div class="wrapper">
+          <div class="pokeball_load"></div>
+        </div>
+        <div class="eye"></div>
       </div>
-      <div class="eye"></div>
-    </div>
+    </main>
     <div class="load_more">
       <button id="loadMoreBtn" onclick="bulkLoadNextPokemon()">
         Show More!

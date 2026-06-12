@@ -13,6 +13,20 @@
 }
 
 @media screen and (max-width: 820px) {
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .search_wrapper {
+    margin-bottom: 16px;
+  }
+
+  .pokemon_box {
+    padding: 16px;
+  }
+
   .headline {
     flex-direction: column;
   }
