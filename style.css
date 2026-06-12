@@ -19,7 +19,6 @@
   border: 2px solid black;
   transition: all 250ms ease-in-out;
   background-color: #cdc9c9;
-  background-image: url(./assets/imgs/pkm_background.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -236,6 +235,7 @@
   box-shadow: 0 0 0 7px black;
   animation: blink 0.5s alternate infinite;
   animation-play-state: paused;
+  cursor: pointer;
 }
 
 .pokeball:hover .pokeball__button {
@@ -307,7 +307,7 @@
     inset 0 1px 0 1px black,
     0 0 0 1px black,
     inset 0 0 0 1px black;
-  background-image: url(./assets/imgs/pkm_background.png);
+  
   background-position: center;
   background-repeat: repeat;
   background-size: contain;
@@ -377,7 +377,6 @@ footer {
     inset 0 1px 0 1px black,
     0 0 0 1px black,
     inset 0 0 0 1px black;
-  background-image: url(./assets/imgs/pkm_background.png);
   background-position: center;
   background-repeat: repeat;
   background-size: contain;

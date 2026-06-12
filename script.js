@@ -243,6 +243,7 @@ function playPokemonCry(i, fromSearch = false) {
     fromSearch === true || fromSearch === "true" ? searchResults : pokemonInfos;
   const url = source[i].cries.latest;
   const audio = new Audio(url);
+  audio.volume = 0.2;
   audio.play();
 }
 
@@ -270,7 +271,7 @@ function closeDetails() {
 }
 
 async function searchPokemon() {
-  const input = document.getElementById("searchInput").value.toLowerCase();
+  const input = document.querySelector("input").value.toLowerCase();
   const cardRef = document.getElementById("content");
   const loadMoreBtn = document.querySelector(".load_more button");
   const hint = document.getElementById("search_hint");
@@ -297,7 +298,7 @@ function resetSearch() {
   searchDescriptions = [];
   isSearchMode = false;
   document.querySelector(".load_more button").disabled = false;
-  document.getElementById("searchInput").value = "";
+  document.querySelector("input").value = "";
   document.getElementById("content").innerHTML = "";
   renderPokemonCard(0);
 }
@@ -427,7 +428,6 @@ function switchPokemon(i, fromSearch = false) {
 function clearContent() {
   const loader = document.getElementById("loader");
   const cardRef = document.getElementById("content");
-  cardRef.removeChild(loader);
   cardRef.innerHTML = "";
-  cardRef.appendChild(loader);
+  
 }
