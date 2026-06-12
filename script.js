@@ -429,5 +429,4 @@ function clearContent() {
   const loader = document.getElementById("loader");
   const cardRef = document.getElementById("content");
   cardRef.innerHTML = "";
-  
 }
