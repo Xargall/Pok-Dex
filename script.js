@@ -1,7 +1,7 @@
 let START = 1;
 let STOP = START + 20;
 let isLoading = false;
-
+let isSearchMode = false;
 let currentIndex = 0;
 
 let allPokemonList = [];
@@ -38,7 +38,7 @@ async function bulkLoadPokemon() {
   START += 20;
   STOP += 20;
   renderPokemonCard();
-  setMoreBtn(false);
+  if (!isSearchMode) setMoreBtn(false);
 }
 
 async function fetchAllPokemonNames() {
@@ -67,7 +67,7 @@ async function bulkLoadNextPokemon() {
   START += 20;
   STOP += 20;
   renderPokemonCard(renderFrom);
-  setMoreBtn(false);
+  if (!isSearchMode) setMoreBtn(false);
 }
 
 async function fetchAndStore(promises) {
@@ -357,7 +357,8 @@ function resetSearch() {
   searchResults = [];
   searchDescriptions = [];
   filteredIndices = [];
-  isSearchMode = false;
+  isLoading = false;
+  document.getElementById("loader").classList.add("d_none");
   document.querySelector(".load_more button").disabled = false;
   document.querySelector("input").value = "";
   document.getElementById("search_hint").classList.remove("visible");
@@ -371,7 +372,6 @@ function searchLocally(input, cardRef) {
   );
   if (filtered.length === 0) return false;
   filteredIndices = filtered.map((p) => pokemonInfos.indexOf(p));
-  isSearchMode = false;
   filtered.forEach((p) => {
     const index = pokemonInfos.indexOf(p);
     cardRef.innerHTML += getPokemonCardTemplate(index);
