@@ -19,7 +19,6 @@ let imageCache = {};
 async function init() {
   await fetchAllPokemonNames();
   await bulkLoadPokemon();
-  console.log(allPokemonList[0]);
 }
 
 async function bulkLoadPokemon() {
@@ -232,8 +231,10 @@ async function renderEvolutionChain(i, source = pokemonInfos) {
 }
 
 async function fetchEvoChain(pokeId) {
-  if (pokeId > 10000) return null; 
-  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`);
+  if (pokeId > 10000) return null;
+  const speciesRes = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
+  );
   if (!speciesRes.ok) return null;
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
@@ -347,8 +348,8 @@ function handleInvalidInput() {
 
 async function handleValidInput(cardRef, input) {
   document.getElementById("search_hint").classList.remove("visible");
+  document.getElementById("loader").classList.add("d_none");
   document.querySelector(".load_more button").disabled = true;
-  setMoreBtn(false);
   if (!searchLocally(input, cardRef)) await searchGlobally(input, cardRef);
 }
 
@@ -359,7 +360,8 @@ function resetSearch() {
   isSearchMode = false;
   document.querySelector(".load_more button").disabled = false;
   document.querySelector("input").value = "";
-  document.getElementById("content").innerHTML = "";
+  document.getElementById("search_hint").classList.remove("visible");
+  clearContent();
   renderPokemonCard(0);
 }
 
