@@ -100,6 +100,12 @@ async function getPkmDescription(pokeID) {
   return await response.json();
 }
 
+async function getPkmDescriptionByUrl(url) {
+  const response = await fetch(url);
+  if (!response.ok) return null;
+  return await response.json();
+}
+
 function getFrontPicture(pokeID) {
   return new Promise((resolve, reject) => {
     const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
@@ -217,16 +223,18 @@ async function renderEvolutionChain(i, source = pokemonInfos) {
   const chain = await fetchEvoChain(pokeId);
   const evoRef = document.getElementById("evoChain");
   evoRef.innerHTML = "";
-  if (chain.evolves_to.length === 0) return (evoRef.innerHTML = "No Evolution");
+  if (!chain)
+    return (document.getElementById("evoChain").innerHTML =
+      "No Evolution data");
   chain.evolves_to.forEach((evo) =>
     evoRef.appendChild(buildEvoRow(chain, evo)),
   );
 }
 
 async function fetchEvoChain(pokeId) {
-  const speciesRes = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`,
-  );
+  if (pokeId > 10000) return null; 
+  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokeId}`);
+  if (!speciesRes.ok) return null;
   const species = await speciesRes.json();
   const evoRes = await fetch(species.evolution_chain.url);
   return (await evoRes.json()).chain;
@@ -313,24 +321,34 @@ function closeDetails() {
 async function searchPokemon() {
   const input = document.querySelector("input").value.toLowerCase();
   const cardRef = document.getElementById("content");
-  const loadMoreBtn = document.querySelector(".load_more button");
-  const hint = document.getElementById("search_hint");
-  const isNumber = !isNaN(input) && input.trim() !== "";
   clearContent();
-  if (input.length === 0) {
-    hint.classList.add("visible");
-    setMoreBtn(false);
-    return resetSearch(loadMoreBtn);
-  }
-  if (!isNumber && input.length < 3) {
-    hint.classList.add("visible");
-    clearContent();
-    setMoreBtn(true);
-    return;
-  }
-  hint.classList.remove("visible");
+
+  if (input.length === 0) return handleEmptyInput();
+  if (isInvalidInput(input)) return handleInvalidInput();
+
+  handleValidInput(cardRef, input);
+}
+
+function handleEmptyInput() {
+  document.getElementById("search_hint").classList.remove("visible");
   setMoreBtn(false);
-  loadMoreBtn.disabled = true;
+  resetSearch();
+}
+
+function isInvalidInput(input) {
+  const isNumber = !isNaN(input) && input.trim() !== "";
+  return !isNumber && input.length < 3;
+}
+
+function handleInvalidInput() {
+  document.getElementById("search_hint").classList.add("visible");
+  setMoreBtn(true);
+}
+
+async function handleValidInput(cardRef, input) {
+  document.getElementById("search_hint").classList.remove("visible");
+  document.querySelector(".load_more button").disabled = true;
+  setMoreBtn(false);
   if (!searchLocally(input, cardRef)) await searchGlobally(input, cardRef);
 }
 
@@ -359,6 +377,7 @@ function searchLocally(input, cardRef) {
   });
   return true;
 }
+
 async function searchGlobally(input, cardRef) {
   const matches = allPokemonList.filter(
     (p) =>
@@ -372,23 +391,32 @@ async function searchGlobally(input, cardRef) {
 }
 
 async function fetchAndRenderSearchResult(matches, cardRef) {
+  await fetchSearchData(matches);
+  renderSearchCards(cardRef);
+}
+
+async function fetchSearchData(matches) {
   const results = (
     await Promise.all(
       matches.map((match) =>
-        Promise.all([
-          fetch(match.url).then((r) => r.json()),
-          getPkmDescription(match.name),
-        ]),
+        fetch(match.url)
+          .then((r) => r.json())
+          .then((info) =>
+            Promise.all([
+              Promise.resolve(info),
+              getPkmDescriptionByUrl(info.species.url),
+            ]),
+          ),
       ),
     )
   ).filter(([, description]) => description !== null);
-
   searchResults = results.map(([info]) => info);
   searchDescriptions = results.map(([, description]) => description);
-
   await Promise.all(searchResults.map((info) => getFrontPicture(info.id)));
-
   isSearchMode = true;
+}
+
+function renderSearchCards(cardRef) {
   cardRef.innerHTML = "";
   searchResults.forEach((_, i) => {
     cardRef.innerHTML += getPokemonCardTemplate(i, true);

@@ -61,17 +61,18 @@ function getDialogTemplate(i, fromSearch = false) {
   return /*html*/ `
     <div onclick="bubbleProtection(event)">
         <div class="dialog_controls">
-                    <button class="dialog_prev" onclick="switchPokemon(${prevIndex}, ${fromSearch})" ${isFirst ? "disabled" : ""}>‹</button>
-                    <button onclick="event.stopPropagation(); showTab('info', ${i}, ${fromSearch})" class="tab_btn active" id="tab_info">Info</button>
-                    <button onclick="event.stopPropagation(); showTab('evo', ${i}, ${fromSearch})" class="tab_btn" id="tab_evo">Evolution</button>
-                    <button class="dialog_next" onclick="switchPokemon(${nextIndex}, ${fromSearch})" ${isLast ? "disabled" : ""}>›</button>
-</div>
+            <button class="dialog_prev" onclick="switchPokemon(${prevIndex}, ${fromSearch})" style="${isFirst ? 'visibility: hidden' : ''}">‹</button>
+            <button onclick="event.stopPropagation(); showTab('info', ${i}, ${fromSearch})" class="tab_btn active" id="tab_info">Info</button>
+            <button onclick="event.stopPropagation(); showTab('evo', ${i}, ${fromSearch})" class="tab_btn" id="tab_evo">Evolution</button>
+            <button class="dialog_next" onclick="switchPokemon(${nextIndex}, ${fromSearch})" style="${isLast ? 'visibility: hidden' : ''}">›</button>
+        </div>
         <section class="detail_view ${source[i].types[0].type.name}">
             <div class="detail_head ${source[i].types[0].type.name} ">
                 <div class="dialog_headline">
                     <h2 id="dialog_name${i}"></h2>
                     <p>#${String(source[i].id).padStart(3, "0")}</p>
                 </div>
+                <button class="close_btn" onclick="closeDetails()">✕</button>
                 <div class="dialog_imgs">      
                     <div id="dialog_pokemonImg${i}" class="detail_sprite"></div>
                     <button class="cry_btn" onclick="playPokemonCry(${i}, ${fromSearch})"><img src="./assets/icons/Professor Oak.png" alt=""></button>
