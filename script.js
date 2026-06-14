@@ -12,6 +12,8 @@ let pokemonCharacteristics = [];
 
 let pokemonCry = [];
 
+let filteredIndices = [];
+
 let imageCache = {};
 
 async function init() {
@@ -316,17 +318,17 @@ async function searchPokemon() {
   const isNumber = !isNaN(input) && input.trim() !== "";
   clearContent();
   if (input.length === 0) {
-    hint.innerHTML = "";
+    hint.classList.add("visible");
     setMoreBtn(false);
     return resetSearch(loadMoreBtn);
   }
   if (!isNumber && input.length < 3) {
-    hint.innerHTML = "Please enter at least 3 characters...";
+    hint.classList.add("visible");
     clearContent();
     setMoreBtn(true);
     return;
   }
-  hint.innerHTML = "";
+  hint.classList.remove("visible");
   setMoreBtn(false);
   loadMoreBtn.disabled = true;
   if (!searchLocally(input, cardRef)) await searchGlobally(input, cardRef);
@@ -335,6 +337,7 @@ async function searchPokemon() {
 function resetSearch() {
   searchResults = [];
   searchDescriptions = [];
+  filteredIndices = [];
   isSearchMode = false;
   document.querySelector(".load_more button").disabled = false;
   document.querySelector("input").value = "";
@@ -347,6 +350,7 @@ function searchLocally(input, cardRef) {
     (p) => p.name.includes(input) || String(p.id) === String(Number(input)),
   );
   if (filtered.length === 0) return false;
+  filteredIndices = filtered.map((p) => pokemonInfos.indexOf(p));
   isSearchMode = false;
   filtered.forEach((p) => {
     const index = pokemonInfos.indexOf(p);
@@ -355,7 +359,6 @@ function searchLocally(input, cardRef) {
   });
   return true;
 }
-
 async function searchGlobally(input, cardRef) {
   const matches = allPokemonList.filter(
     (p) =>

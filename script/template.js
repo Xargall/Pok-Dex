@@ -31,14 +31,40 @@ function getTypesTemplate(i, index, source = pokemonInfos) {
 }
 
 function getDialogTemplate(i, fromSearch = false) {
+  const isFiltered = filteredIndices.length > 0;
+  const currentPos = fromSearch
+    ? i
+    : isFiltered
+      ? filteredIndices.indexOf(i)
+      : i;
+  const prevIndex = fromSearch
+    ? i - 1
+    : isFiltered
+      ? filteredIndices[currentPos - 1]
+      : i - 1;
+  const nextIndex = fromSearch
+    ? i + 1
+    : isFiltered
+      ? filteredIndices[currentPos + 1]
+      : i + 1;
+  const isFirst = fromSearch
+    ? i === 0
+    : isFiltered
+      ? currentPos === 0
+      : i === 0;
+  const isLast = fromSearch
+    ? i === searchResults.length - 1
+    : isFiltered
+      ? currentPos === filteredIndices.length - 1
+      : i === pokemonInfos.length - 1;
   const source = fromSearch ? searchResults : pokemonInfos;
   return /*html*/ `
     <div onclick="bubbleProtection(event)">
         <div class="dialog_controls">
-                    <button class="dialog_prev" onclick="switchPokemon(${i} - 1, ${fromSearch})" ${i === 0 || fromSearch ? "disabled" : ""}>‹</button>
+                    <button class="dialog_prev" onclick="switchPokemon(${prevIndex}, ${fromSearch})" ${isFirst ? "disabled" : ""}>‹</button>
                     <button onclick="event.stopPropagation(); showTab('info', ${i}, ${fromSearch})" class="tab_btn active" id="tab_info">Info</button>
                     <button onclick="event.stopPropagation(); showTab('evo', ${i}, ${fromSearch})" class="tab_btn" id="tab_evo">Evolution</button>
-                    <button class="dialog_next" onclick="switchPokemon(${i} + 1, ${fromSearch})" ${i === pokemonInfos.length - 1 || fromSearch ? "disabled" : ""}>›</button>
+                    <button class="dialog_next" onclick="switchPokemon(${nextIndex}, ${fromSearch})" ${isLast ? "disabled" : ""}>›</button>
 </div>
         <section class="detail_view ${source[i].types[0].type.name}">
             <div class="detail_head ${source[i].types[0].type.name} ">
