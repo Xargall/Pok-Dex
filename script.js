@@ -72,9 +72,21 @@ async function bulkLoadNextPokemon() {
 
 async function fetchAndStore(promises) {
   const results = await Promise.all(promises);
-  for (const [info, description] of results) {
-    pokemonInfos.push(info);
+  for (const [info, description, image] of results) {
+    if (info) {
+      pokemonInfos.push(info);
+    } else {
+      pokemonInfos.push(null);
+    }
+    
     pokemonCharacteristics.push(description);
+    
+    // Image is already cached by getFrontPicture, but we track it here for completeness
+    if (image && info) {
+      if (!imageCache[info.id]) {
+        imageCache[info.id] = image.src;
+      }
+    }
   }
   return results;
 }
@@ -199,9 +211,24 @@ function renderDialogTypes(i, source = pokemonInfos) {
 function renderDialogDescription(i, source = pokemonInfos) {
   const descRef = document.getElementById(`dialog_description${i}`);
   descRef.innerHTML = "";
+  
+  if (!source || !source[i]) {
+    descRef.innerHTML = "No description available.";
+    return;
+  }
+  
   const entries = source[i].flavor_text_entries;
+  if (!entries) {
+    descRef.innerHTML = "No description available.";
+    return;
+  }
+  
   const entry = entries.find((e) => e.language.name === "en");
-  if (!entry) return;
+  if (!entry) {
+    descRef.innerHTML = "No English description available.";
+    return;
+  }
+  
   descRef.innerHTML = entry.flavor_text.replace(/[\f\r\n\t]/g, " ");
 }
 
