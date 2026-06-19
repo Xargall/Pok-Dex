@@ -208,28 +208,19 @@ function renderDialogTypes(i, source = pokemonInfos) {
   }
 }
 
+function getEnglishDescription(speciesData) {
+  if (!speciesData?.flavor_text_entries) return null;
+  const entry = speciesData.flavor_text_entries.find((e) => e.language.name === "en");
+  return entry ? entry.flavor_text.replace(/[\f\r\n\t]/g, " ") : null;
+}
+
 function renderDialogDescription(i, source = pokemonInfos) {
   const descRef = document.getElementById(`dialog_description${i}`);
-  descRef.innerHTML = "";
-  
-  if (!source || !source[i]) {
-    descRef.innerHTML = "No description available.";
-    return;
-  }
-  
-  const entries = source[i].flavor_text_entries;
-  if (!entries) {
-    descRef.innerHTML = "No description available.";
-    return;
-  }
-  
-  const entry = entries.find((e) => e.language.name === "en");
-  if (!entry) {
-    descRef.innerHTML = "No English description available.";
-    return;
-  }
-  
-  descRef.innerHTML = entry.flavor_text.replace(/[\f\r\n\t]/g, " ");
+  const speciesData = source?.[i];
+  const description = getEnglishDescription(speciesData);
+
+  descRef.innerHTML = description ||
+    (speciesData ? "No English description available." : "No description available.");
 }
 
 function renderHeight(i, source = pokemonInfos) {
