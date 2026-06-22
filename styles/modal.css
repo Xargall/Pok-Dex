@@ -3,7 +3,7 @@ dialog {
   justify-content: center;
   border: none;
   background-color: white;
-  width: 350px;
+  width: min(350px, calc(100vw - 24px));
   height: 600px;
   border-radius: 40px;
   left: 0;
@@ -18,7 +18,7 @@ dialog {
 dialog.opened {
   border: none;
   transition: all 2s ease-in;
-  width: 350px;
+  width: min(350px, calc(100vw - 24px));
   height: 600px;
   border-radius: 40px;
   overflow: hidden;
@@ -84,7 +84,7 @@ dialog.opened::backdrop {
   position: absolute;
   top: 35px;
   right: 30px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -92,11 +92,11 @@ dialog.opened::backdrop {
   height: 32px;
   font-size: 16px;
   cursor: pointer;
-  font-family: 'Pixelify Sans', sans-serif;
+  font-family: "Pixelify Sans", sans-serif;
 }
 
 .close_btn:hover {
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .dialog_imgs {
@@ -208,24 +208,139 @@ dialog.opened::backdrop {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  padding: 8px;
-  gap: 16px;
+  padding: 8px 6px 70px;
+  gap: 8px;
   height: 350px;
   overflow-y: auto;
   width: 100%;
   margin: 0;
+  container-type: inline-size;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 12px,
+    black calc(100% - 60px),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 12px,
+    black calc(100% - 60px),
+    transparent 100%
+  );
 }
 
-.evo_row {
+.evolution::-webkit-scrollbar {
+  width: 4px;
+}
+
+.evolution::-webkit-scrollbar-thumb {
+  background: #e8dcc0;
+  border-radius: 2px;
+}
+
+.evolution::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.evo_stage {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: #fdf8ee;
+  border: 2px solid #e8dcc0;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.evo_row img {
+.evo_stage:hover {
+  transform: translateY(-3px);
+  border-color: #c0392b;
+}
+
+.evo_stage img {
   width: 60px;
   height: 60px;
   object-fit: contain;
+}
+
+.evo_stage_name {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a3c28;
+  text-transform: capitalize;
+}
+
+.evo_stage.evo_current {
+  background: #fdebea;
+  border-color: #c0392b;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25);
+}
+
+.evo_chain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.evo_level {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.evo_connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.evo_connector svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #c0392b;
+  stroke-width: 2.5;
+}
+
+.evo_method {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 9px;
+  color: #8a7a5c;
+  background: #f1ead9;
+  padding: 2px 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.evo_method {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 9px;
+  color: #8a7a5c;
+  white-space: nowrap;
+}
+
+@container (max-width: 300px) {
+  .evo_stage img {
+    width: 48px;
+    height: 48px;
+  }
+  .evo_stage {
+    padding: 8px 10px;
+  }
+  .evo_stage_name {
+    font-size: 10px;
+  }
 }
 
 .dialog_prev,
