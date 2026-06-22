@@ -106,7 +106,7 @@ async function fetchAndStore(promises) {
 async function bulkLoadPokemon() {
   if (isLoading) return;
   setMoreBtn(true);
-  await loadBatch(1, BATCH_SIZE);
+  await loadBatch(1, BATCH_SIZE + 1);
   START += BATCH_SIZE; STOP += BATCH_SIZE;
   renderPokemonCard();
   if (!isSearchMode) setMoreBtn(false);
@@ -140,7 +140,7 @@ function renderPokemonCard(startIndex = 0) {
   const cardRef = document.getElementById('content');
   for (let i = startIndex; i < pokemonInfos.length; i++) {
     cardRef.innerHTML += getPokemonCardTemplate(i);
-    renderCardContent(i, i + 1);
+    renderCardContent(i, pokemonInfos[i]?.id);
   }
 }
 
@@ -149,7 +149,7 @@ function renderCardContent(i, pokeID, fromSearch = false) {
   const p = source[i];
   document.getElementById(`pkm_name${i}`).innerHTML = capitalizeFirst(p?.name || '');
   renderTypes(i, source, '');
-  renderImage(`pokemonImg${i}`, pokeID, p);
+  renderImage(`pokemonImg${i}`, p?.id, p);
 }
 
 function renderTypes(i, source, prefix = '') {
@@ -164,7 +164,7 @@ function renderImage(id, pokeID, pokemon) {
   if (!container) return;
   const img = new Image();
   img.src = imageCache[pokeID] || spriteUrl(pokeID);
-  img.alt = pokemon?.name || 'Pokemon';
+  img.alt = pokemon?.name || (pokeID ? `Pokemon #${pokeID}` : 'Pokemon');
   container.appendChild(img);
 }
 
