@@ -54,15 +54,31 @@ dialog.opened::backdrop {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   padding: 20px 24px 0;
+  gap: 8px;
 }
 
 .dialog_headline > p {
   font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
-.dialog_headline > h2 {
-  font-size: 2rem;
+.dialog_headline h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+  flex: 1;
+  min-width: 0;
+}
+
+.dialog_headline h2.name_md {
+  font-size: 1.5rem;
+}
+
+.dialog_headline h2.name_sm {
+  font-size: 1.1rem;
 }
 
 .detail_head {

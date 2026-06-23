@@ -38,7 +38,7 @@ async function fetchAllPokemonNames() {
 }
 
 function getFrontPicture(pokeID) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
     if (imageCache[pokeID]) {
       const img = new Image();
@@ -52,7 +52,10 @@ function getFrontPicture(pokeID) {
       imageCache[pokeID] = url;
       resolve(img);
     };
-    img.onerror = reject;
+    img.onerror = () => {
+      console.warn(`[getFrontPicture] Sprite fehlt für #${pokeID}`);
+      resolve(null);
+    };
   });
 }
 
@@ -126,8 +129,22 @@ function renderCardContent(i, fromSearch = false) {
 function renderName(i, source = pokemonInfos, idPrefix = "") {
   const ref = document.getElementById(`${idPrefix}name${i}`);
   const word = source[i].name;
-  ref.innerHTML = word.charAt(0).toUpperCase() + word.slice(1);
+  ref.innerHTML = formatPokemonName(source[i].name);
+  if (idPrefix === "dialog_") applyNameSizing(ref, word);
 }
+
+function applyNameSizing(ref, word) {
+  ref.classList.remove("name_md", "name_sm");
+  if (word.length > 14) ref.classList.add("name_sm");
+  else if (word.length > 9) ref.classList.add("name_md");
+}
+
+function formatPokemonName(name) {
+  const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  return name.split("-").map(capitalizeFirst).join(" ");
+}
+
+
 
 function renderTypes(i, source = pokemonInfos, idPrefix = "") {
   const typeRef = document.getElementById(`${idPrefix}types${i}`);
@@ -139,7 +156,9 @@ function renderTypes(i, source = pokemonInfos, idPrefix = "") {
 function renderPicture(i, source = pokemonInfos, idPrefix = "") {
   const pokeID = source[i].id;
   const img = new Image();
-  img.src = imageCache[pokeID];
+  img.src =
+    imageCache[pokeID] ??
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
   img.alt = source[i].name;
   document.getElementById(`${idPrefix}pokemonImg${i}`).appendChild(img);
 }
