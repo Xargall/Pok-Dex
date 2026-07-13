@@ -10,7 +10,6 @@ function cacheSet(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
     } catch (e) {
-        // localStorage voll oder nicht verfügbar – kein Problem
         console.warn("[cache] setItem fehlgeschlagen:", e);
     }
 }
@@ -30,25 +29,27 @@ function cacheGet(key) {
     }
 }
 
-// -- safeFetch mit Retry + Cache --
+// Nur relevante Felder für den Cache extrahieren
+function slimPokemon(data) {
+    if (!data) return null;
+    return {
+        id: data.id,
+        name: data.name,
+        types: data.types,
+    };
+}
+
+// -- safeFetch mit Retry (kein Cache hier – Cache nur gezielt in api.js) --
 
 async function safeFetch(url, retries = 2) {
-    // 1. Cache prüfen
-    const cached = cacheGet(url);
-    if (cached) return cached;
-
-    // 2. Fetch mit Retry
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
             const res = await fetch(url);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            cacheSet(url, data);  // erfolgreiche Response cachen
-            return data;
+            return await res.json();
         } catch (e) {
             const isLastAttempt = attempt === retries;
             if (!isLastAttempt) {
-                // kurz warten vor dem nächsten Versuch (500ms, 1000ms)
                 await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
                 continue;
             }
