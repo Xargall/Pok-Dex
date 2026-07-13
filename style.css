@@ -420,8 +420,8 @@ footer {
   opacity: 1;
 }
 /* ============================================
-   HOLO CARD EFFECT (v3 – sanfte Rotation)
-   Ersetzt den vorherigen Block in style.css
+   HOLO CARD EFFECT (typ-spezifisch)
+   Ersetzt den gesamten bisherigen Holo-Block in style.css
    ============================================ */
 
 .card_section {
@@ -434,9 +434,23 @@ footer {
     box-shadow 0.2s ease;
   will-change: transform;
   overflow: hidden;
+  container-type: inline-size;
+
+  /* Fallback-Farben (Normal-Typ) */
+  --holo-c1: #c8c8a0;
+  --holo-c2: #a8a878;
+  --holo-c3: #d0d0b0;
 }
 
-/* -- Shine: Regenbogen-Holo -- */
+.card_section:hover {
+  transform: perspective(600px) rotateY(var(--rx, 0deg))
+    rotateX(var(--ry, 0deg)) scale(1.05);
+  box-shadow:
+    0 0 8px 1px rgba(120, 200, 255, 0.25),
+    10px 10px 10px #000;
+}
+
+/* -- Shine: Typ-Farben -- */
 .card__shine {
   position: absolute;
   inset: 0;
@@ -449,13 +463,10 @@ footer {
   background-image:
     repeating-linear-gradient(
       0deg,
-      rgb(255, 119, 115) 0%,
-      rgb(255, 237, 95) 14.28%,
-      rgb(168, 255, 95) 28.57%,
-      rgb(131, 255, 247) 42.85%,
-      rgb(120, 148, 255) 57.14%,
-      rgb(216, 117, 255) 71.42%,
-      rgb(255, 119, 115) 100%
+      var(--holo-c1) 0%,
+      var(--holo-c2) 33%,
+      var(--holo-c3) 66%,
+      var(--holo-c1) 100%
     ),
     repeating-linear-gradient(
       133deg,
@@ -483,7 +494,7 @@ footer {
     var(--posx, 50%) var(--posy, 50%),
     var(--posx, 50%) var(--posy, 50%);
 
-  filter: brightness(0.9) contrast(1.8) saturate(0.6);
+  filter: brightness(0.9) contrast(1.8) saturate(0.75);
   mix-blend-mode: soft-light;
 }
 

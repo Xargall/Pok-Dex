@@ -18,6 +18,10 @@ function renderCardContent(i, fromSearch = false) {
     renderName(i, source, "pkm_");
     renderTypes(i, source);
     renderPicture(i, source);
+
+    // Holo-Farben auf die Card anwenden
+    const card = document.querySelectorAll(".card_section")[i];
+    if (card) applyHoloColors(card, source[i].types);
 }
 
 function renderName(i, source = pokemonInfos, idPrefix = "") {

@@ -84,11 +84,16 @@ async function bulkLoadNextPokemon() {
 async function fetchAndStore(promises) {
   const results = await Promise.all(promises);
   let anyFailed = false;
+
   for (const [info, description] of results) {
-    if (!info) { anyFailed = true; continue; } // fehlgeschlagene überspringen
+    if (!info) {
+      anyFailed = true;
+      continue; // fehlgeschlagene überspringen
+    }
     pokemonInfos.push(info);
     pokemonCharacteristics.push(description);
   }
+
   if (anyFailed) showApiError("Einige Pokémon konnten nicht geladen werden – API möglicherweise nicht erreichbar.");
   return results;
 }
