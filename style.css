@@ -1,28 +1,159 @@
+/* ============================================
+   STYLE.CSS – PokéDex
+   Mathias Mayer · 2026
+   ============================================
+   Inhaltsverzeichnis:
+   1.  Layout – Main & Content
+   2.  Header & Suche
+   3.  Pokémon-Karten
+   4.  Loader & Show-More
+   5.  Pokeball-Button
+   6.  Holo-Effekt
+   7.  Footer
+   8.  API-Fehler Banner
+   9.  Accessibility
+   ============================================ */
+
+/* ============================================
+   1. LAYOUT – MAIN & CONTENT
+   ============================================ */
+
 .main_content {
   display: flex;
   flex-wrap: wrap;
   flex: 1;
   justify-content: center;
-  padding: 50px 50px;
+  padding: 50px;
   background: #6b0d14;
 }
 
+/* ============================================
+   2. HEADER & SUCHE
+   ============================================ */
+
+.pokemon_box {
+  display: flex;
+  justify-content: center;
+  background-color: #cdc9c9;
+  width: 100%;
+  padding: 8px 50px;
+  border: 1px solid white;
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 1px black,
+    inset 0 1px 0 1px black,
+    0 0 0 1px black,
+    inset 0 0 0 1px black;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: contain;
+  background-blend-mode: soft-light;
+}
+
+.headline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headline h1 {
+  font-size: 5rem;
+}
+
+.search_wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.search_wrapper button {
+  background: #a4121c;
+  color: #fff;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 14px;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #6b0b12;
+}
+
+.search_wrapper button:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #6b0b12;
+}
+
+input {
+  width: 300px;
+  height: 30px;
+  font-family: "Pixelify Sans", sans-serif;
+  border: 1px solid white;
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 1px black,
+    inset 0 1px 0 1px black,
+    0 0 0 1px black,
+    inset 0 0 0 1px black;
+}
+
+#search_hint {
+  width: 100%;
+  color: #a4121c;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#search_hint.visible {
+  opacity: 1;
+}
+
+/* ============================================
+   3. POKÉMON-KARTEN
+   ============================================ */
+
 .card_section {
+  /* Layout */
   width: 250px;
   height: 200px;
   margin: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  /* Aussehen */
   border-radius: 35px;
-  box-shadow: 10px 10px 10px #000000;
   border: 2px solid black;
-  transition: all 250ms ease-in-out;
   background-color: #cdc9c9;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
   background-blend-mode: overlay;
+  box-shadow: 10px 10px 10px #000;
+
+  /* Holo-Effekt Basis */
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  container-type: inline-size;
+  transform: perspective(600px) rotateY(var(--rx, 0deg))
+    rotateX(var(--ry, 0deg));
+  will-change: transform;
+
+  /* Holo-Farben Fallback (Normal-Typ) */
+  --holo-c1: #c8c8a0;
+  --holo-c2: #a8a878;
+  --holo-c3: #d0d0b0;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card_section:hover {
@@ -32,10 +163,40 @@
     0 0 8px 1px rgba(120, 200, 255, 0.25),
     10px 10px 10px #000;
 }
+
 .card_head {
   display: flex;
   justify-content: space-between;
   padding: 8px 16px;
+}
+
+.card_head h3 {
+  font-size: 1rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card_head h3.name_md {
+  font-size: 0.82rem;
+}
+.card_head h3.name_sm {
+  font-size: 0.65rem;
+}
+
+.card_body {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px 16px;
+}
+
+.body_left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px 8px;
 }
 
 .types {
@@ -54,23 +215,7 @@
   height: 30px;
   border-radius: 25px;
   line-height: 120%;
-
-  /* https://smoothshadows.com/#djEsMSwxLDAuNTYsMTAsMCwwLCMwMzA3MTIsI2YzZjRmNiwjZmZmZmZmLDI%3D */
-  box-shadow: 0px 0px 10px rgba(3, 7, 18, 0.56);
-}
-
-.card_body {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 16px 16px;
-}
-
-.body_left {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 8px 8px;
+  box-shadow: 0 0 10px rgba(3, 7, 18, 0.56);
 }
 
 .pkm_sprite > img {
@@ -78,23 +223,28 @@
   height: 120px;
 }
 
-.load_more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px 40px;
-  background: #6b0d14;
+.detail_sprite img,
+.pkm_sprite img {
+  min-width: 0;
+  min-height: 0;
 }
 
-.evolution img {
-  width: 72px;
-  height: auto;
+.detail_sprite:empty,
+.pkm_sprite:empty {
+  display: none;
+}
+
+/* ============================================
+   4. LOADER & SHOW MORE
+   ============================================ */
+
+.d_none {
+  display: none;
 }
 
 .center {
   display: flex;
   justify-content: center;
-  padding: 70px;
   background: #6b0d14;
   height: 0;
   padding: 0;
@@ -107,11 +257,6 @@
 .center:not(.d_none) {
   height: auto;
   padding: 70px;
-}
-
-/*#region loader */
-.d_none {
-  display: none;
 }
 
 .wrapper {
@@ -129,10 +274,10 @@
   position: relative;
   overflow: hidden;
   border: 3px solid;
-  animation: frames 0.8s linear 0s infinite;
+  animation: spin 0.8s linear infinite;
 }
 
-.pokeball_load:after {
+.pokeball_load::after {
   content: "";
   position: absolute;
   width: 60px;
@@ -142,7 +287,7 @@
   top: -4px;
 }
 
-.pokeball_load:before {
+.pokeball_load::before {
   content: "";
   position: absolute;
   background-color: #fff;
@@ -155,23 +300,68 @@
   z-index: 1;
 }
 
-/* AnimationFrames */
-@keyframes frames {
-  0% {
+@keyframes spin {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
 
-/*#endregion */
+.load_more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px 40px;
+  background: #6b0d14;
+}
 
-/*#region pokeball-button */
+.load_more button {
+  background: #cdc9c9;
+  color: black;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 48px;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow:
+    0 6px 0 black,
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+
+.load_more button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 #6b0b12,
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.load_more button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #6b0b12,
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.load_more button:disabled {
+  background: #888;
+  box-shadow: 0 6px 0 #555;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   5. POKEBALL-BUTTON
+   ============================================ */
+
 .poke_box {
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
   transform: translate(0, 25%);
   cursor: pointer;
 }
@@ -191,27 +381,6 @@
 
 .pokeball:hover {
   animation-play-state: running;
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(0, 0) rotate(0);
-  }
-  20% {
-    transform: translate(-10px, 0) rotate(-20deg);
-  }
-  30% {
-    transform: translate(10px, 0) rotate(20deg);
-  }
-  50% {
-    transform: translate(-10px, 0) rotate(-10deg);
-  }
-  60% {
-    transform: translate(10px, 0) rotate(10deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(0);
-  }
 }
 
 .pokeball::before,
@@ -244,13 +413,34 @@
   border-radius: 50%;
   z-index: 10;
   box-shadow: 0 0 0 7px black;
+  cursor: pointer;
   animation: blink 0.5s alternate infinite;
   animation-play-state: paused;
-  cursor: pointer;
 }
 
 .pokeball:hover .pokeball__button {
   animation-play-state: running;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  20% {
+    transform: translate(-10px, 0) rotate(-20deg);
+  }
+  30% {
+    transform: translate(10px, 0) rotate(20deg);
+  }
+  50% {
+    transform: translate(-10px, 0) rotate(-10deg);
+  }
+  60% {
+    transform: translate(10px, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
 }
 
 @keyframes blink {
@@ -261,205 +451,11 @@
     background: #e74c3c;
   }
 }
-/*#endregion */
 
-.load_more button {
-  background: #cdc9c9;
-  color: black;
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 18px;
-  letter-spacing: 1px;
-  border: none;
-  border-radius: 50px;
-  padding: 16px 48px;
-  cursor: pointer;
-  box-shadow:
-    0 6px 0 black,
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition:
-    transform 0.08s,
-    box-shadow 0.08s;
-  text-transform: uppercase;
-}
-
-.load_more button:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 0 #6b0b12,
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-.load_more button:active {
-  transform: translateY(4px);
-  box-shadow:
-    0 2px 0 #6b0b12,
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-.load_more button:disabled {
-  background: #888;
-  box-shadow: 0 6px 0 #555;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.pokemon_box {
-  display: flex;
-  justify-content: center;
-  background-color: #cdc9c9;
-  width: 100%;
-  height: 18F0px;
-  border: 1px solid white;
-  border-radius: 2px;
-  margin: auto;
-  padding: 8px 50px;
-  box-shadow:
-    0 1px 0 1px black,
-    inset 0 1px 0 1px black,
-    0 0 0 1px black,
-    inset 0 0 0 1px black;
-
-  background-position: center;
-  background-repeat: repeat;
-  background-size: contain;
-  background-blend-mode: soft-light;
-}
-
-.headline {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.headline h1 {
-  font-size: 5rem;
-}
-
-.search_wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.search_wrapper button {
-  background: #a4121c;
-  color: #fff;
-  font-family: "Pixelify Sans", sans-serif;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #6b0b12;
-  font-size: 14px;
-}
-
-.search_wrapper button:active {
-  transform: translateY(3px);
-  box-shadow: 0 0px 0 #6b0b12;
-}
-
-input {
-  width: 300px;
-  height: 30px;
-  font-family: "Pixelify Sans";
-  border: 1px solid white;
-  border-radius: 2px;
-  box-shadow:
-    0 1px 0 1px black,
-    inset 0 1px 0 1px black,
-    0 0 0 1px black,
-    inset 0 0 0 1px black;
-}
-
-footer {
-  width: 100%;
-  height: 120px;
-  background-color: #cdc9c9;
-  margin-top: auto;
-  border: 1px solid white;
-  border-radius: 2px;
-  box-shadow:
-    0 1px 0 1px black,
-    inset 0 1px 0 1px black,
-    0 0 0 1px black,
-    inset 0 0 0 1px black;
-  background-position: center;
-  background-repeat: repeat;
-  background-size: contain;
-  background-blend-mode: soft-light;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
-  padding: 0 50px;
-}
-
-.battle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column-reverse;
-}
-
-.img_01 {
-  width: 200px;
-  transform: translateY(40px);
-}
-
-.build_up {
-  scale: 0.8;
-  transform: translateY(110px);
-}
-
-#search_hint {
-  width: 100%;
-  color: #a4121c;
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-#search_hint.visible {
-  opacity: 1;
-}
 /* ============================================
-   HOLO CARD EFFECT (typ-spezifisch)
-   Ersetzt den gesamten bisherigen Holo-Block in style.css
+   6. HOLO-EFFEKT
    ============================================ */
 
-.card_section {
-  position: relative;
-  transform-style: preserve-3d;
-  transform: perspective(600px) rotateY(var(--rx, 0deg))
-    rotateX(var(--ry, 0deg));
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  will-change: transform;
-  overflow: hidden;
-  container-type: inline-size;
-
-  /* Fallback-Farben (Normal-Typ) */
-  --holo-c1: #c8c8a0;
-  --holo-c2: #a8a878;
-  --holo-c3: #d0d0b0;
-}
-
-.card_section:hover {
-  transform: perspective(600px) rotateY(var(--rx, 0deg))
-    rotateX(var(--ry, 0deg)) scale(1.05);
-  box-shadow:
-    0 0 8px 1px rgba(120, 200, 255, 0.25),
-    10px 10px 10px #000;
-}
-
-/* -- Shine: Typ-Farben -- */
 .card__shine {
   position: absolute;
   inset: 0;
@@ -507,7 +503,6 @@ footer {
   mix-blend-mode: soft-light;
 }
 
-/* -- Glare: sanfter Lichtfleck -- */
 .card__glare {
   position: absolute;
   inset: 0;
@@ -527,35 +522,77 @@ footer {
   mix-blend-mode: overlay;
 }
 
-/* -- Glow beim Hovern -- */
-.card_section:hover {
+/* ============================================
+   7. FOOTER
+   ============================================ */
+
+footer {
+  width: 100%;
+  height: 120px;
+  background-color: #cdc9c9;
+  margin-top: auto;
+  border: 1px solid white;
+  border-radius: 2px;
   box-shadow:
-    0 0 8px 1px rgba(120, 200, 255, 0.25),
-    10px 10px 10px #000;
-}
-
-.card_head h3 {
-  font-size: 1rem;
-  line-height: 1.2;
-  white-space: nowrap;
+    0 1px 0 1px black,
+    inset 0 1px 0 1px black,
+    0 0 0 1px black,
+    inset 0 0 0 1px black;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: contain;
+  background-blend-mode: soft-light;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 0 50px;
 }
 
-.detail_sprite img,
-.pkm_sprite img {
-  min-width: 0; /* kein Platz reservieren wenn Bild fehlt */
-  min-height: 0;
+.battle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
 }
 
-.detail_sprite:empty,
-.pkm_sprite:empty {
-  display: none; /* Container verstecken wenn kein Bild */
+.img_01 {
+  width: 200px;
+  transform: translateY(40px);
+}
+
+.build_up {
+  scale: 0.8;
+  transform: translateY(110px);
+}
+
+.footer_copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 1.25rem;
+  color: #555;
+}
+
+.footer_copy a {
+  color: #a4121c;
+  text-decoration: none;
+}
+
+.footer_copy a:hover {
+  text-decoration: underline;
+}
+
+.footer_copy_sub {
+  font-size: 1rem;
+  text-align: center;
+  opacity: 0.6;
 }
 
 /* ============================================
-   API FEHLER BANNER
-   Ans Ende der style.css anhängen
+   8. API-FEHLER BANNER
    ============================================ */
 
 .api_error {
@@ -564,17 +601,6 @@ footer {
   border-bottom: 2px solid #a4121c;
   padding: 12px 50px;
   animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 .api_error_inner {
@@ -619,11 +645,11 @@ footer {
   padding: 8px 16px;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   box-shadow: 0 3px 0 #6b0b12;
   transition:
     transform 0.08s,
     box-shadow 0.08s;
-  flex-shrink: 0;
 }
 
 .api_retry_btn:hover {
@@ -636,30 +662,20 @@ footer {
   box-shadow: 0 1px 0 #6b0b12;
 }
 
-.footer_copy {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 1.25rem;
-  color: #555;
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.footer_copy a {
-  color: #a4121c;
-  text-decoration: none;
-}
-
-.footer_copy a:hover {
-  text-decoration: underline;
-}
-
-.footer_copy_sub {
-  opacity: 0.6;
-  font-size: 1rem;
-  text-align: center;
-}
+/* ============================================
+   9. ACCESSIBILITY
+   ============================================ */
 
 .sr_only {
   position: absolute;
