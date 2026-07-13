@@ -46,9 +46,66 @@
   .evolution {
     gap: 8px;
   }
+
+  .battle {
+    display: none;
+  }
+
+  .mart {
+    display: none;
+  }
+
+  footer {
+    justify-content: center;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .card_section {
+    width: calc(50vw - 24px); /* zwei Karten nebeneinander */
+    height: auto;
+    min-height: 180px;
+  }
+
+  .card_body {
+    flex-direction: column-reverse; /* Bild oben, Types unten */
+    align-items: center;
+    padding: 0 8px 8px;
+    gap: 4px;
+  }
+
+  .pkm_sprite img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .body_left {
+    width: 100%;
+    flex-direction: row; /* Types und Pokeball nebeneinander */
+    justify-content: space-between;
+    padding: 0 4px 4px;
+  }
+
+  .types {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .type_tag {
+    width: auto;
+    padding: 0 10px;
+    font-size: 0.75rem;
+  }
+
+  .poke_box {
+    transform: none;
+  }
+
+  .battle {
+    display: none;
+  }
+
   .mart {
     display: none;
   }
