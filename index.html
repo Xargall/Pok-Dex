@@ -14,8 +14,13 @@
       href="./assets/icons/Type=Poké Ball.png"
       type="image/x-icon" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+    <script src="./script/utils.js"></script>
+    <script src="./script/api.js"></script>
+    <script src="./script/render.js"></script>
+    <script src="./script/search.js"></script>
+    <script src="./script/holo.js"></script>
     <script src="./script/template.js"></script>
+    <script src="script.js"></script>
   </head>
   <body onload="init()">
     <header class="pokemon_box">
@@ -34,6 +39,27 @@
         </div>
       </section>
     </header>
+
+    <div
+      id="api_error"
+      class="api_error d_none"
+      role="alert"
+      aria-live="assertive">
+      <div class="api_error_inner">
+        <span class="api_error_icon">⚠️</span>
+        <div class="api_error_text">
+          <strong>PokéAPI nicht erreichbar</strong>
+          <p id="api_error_msg">
+            Die Daten werden aus dem Cache geladen – manche Pokémon könnten
+            fehlen.
+          </p>
+        </div>
+        <button onclick="retryInit()" class="api_retry_btn">
+          ↺ Erneut versuchen
+        </button>
+      </div>
+    </div>
+    
     <main id="content" class="main_content"></main>
     <div class="center d_none" id="loader">
       <div class="wrapper">

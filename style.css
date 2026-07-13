@@ -532,3 +532,86 @@ footer {
 .pkm_sprite:empty {
   display: none; /* Container verstecken wenn kein Bild */
 }
+
+/* ============================================
+   API FEHLER BANNER
+   Ans Ende der style.css anhängen
+   ============================================ */
+
+.api_error {
+  width: 100%;
+  background: #2d0a0a;
+  border-bottom: 2px solid #a4121c;
+  padding: 12px 50px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.api_error_inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.api_error_icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.api_error_text {
+  flex: 1;
+  color: #f5c6c6;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 0.85rem;
+}
+
+.api_error_text strong {
+  display: block;
+  color: #fff;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.api_error_text p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.api_retry_btn {
+  background: #a4121c;
+  color: #fff;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 #6b0b12;
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+  flex-shrink: 0;
+}
+
+.api_retry_btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #6b0b12;
+}
+
+.api_retry_btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #6b0b12;
+}
