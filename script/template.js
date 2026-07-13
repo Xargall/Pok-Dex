@@ -43,10 +43,10 @@ function getDialogTemplate(i, fromSearch = false) {
     return /*html*/ `
     <div onclick="bubbleProtection(event)">
         <div class="dialog_controls">
-            <button class="dialog_prev" onclick="switchPokemon(${prevIndex}, ${fromSearch})" style="${isFirst ? 'visibility: hidden' : ''}">‹</button>
+            <button class="dialog_prev"  aria-label="previous pokémon" onclick="switchPokemon(${prevIndex}, ${fromSearch})" style="${isFirst ? 'visibility: hidden' : ''}">‹</button>
             <button onclick="event.stopPropagation(); showTab('info', ${i}, ${fromSearch})" class="tab_btn active" id="tab_info">Info</button>
             <button onclick="event.stopPropagation(); showTab('evo', ${i}, ${fromSearch})" class="tab_btn" id="tab_evo">Evolution</button>
-            <button class="dialog_next" onclick="switchPokemon(${nextIndex}, ${fromSearch})" style="${isLast ? 'visibility: hidden' : ''}">›</button>
+            <button class="dialog_next"  aria-label="next pokémon" onclick="switchPokemon(${nextIndex}, ${fromSearch})" style="${isLast ? 'visibility: hidden' : ''}">›</button>
         </div>
         <section class="detail_view ${source[i].types[0].type.name}">
             <div class="detail_head ${source[i].types[0].type.name} ">

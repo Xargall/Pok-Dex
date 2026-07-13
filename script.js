@@ -5,6 +5,7 @@ let START = 1, STOP = START + 20;
 let isLoading = false;
 let isSearchMode = false;
 let currentIndex = 0;
+let lastFocusedElement = null;
 
 let allPokemonList = [];
 let pokemonInfos = [];
@@ -104,7 +105,17 @@ async function fetchAndStore(promises) {
 function setMoreBtn(loading) {
   isLoading = loading;
   document.querySelector(".load_more button").disabled = loading;
-  document.getElementById("loader").classList.toggle("d_none", !loading);
+  const loader = document.getElementById("loader");
+  loader.classList.toggle("d_none", !loading);
+  if (!loading) loader.style.display = "none";
+  else loader.style.display = "";
+
+  // Screen Reader informieren
+  const live = document.getElementById("sr_live");
+  if (!live) return;
+  live.textContent = loading
+    ? "Pokémon werden geladen..."
+    : `${pokemonInfos.length} Pokémon geladen.`;
 }
 
 // ============================================
@@ -113,11 +124,15 @@ function setMoreBtn(loading) {
 function openDetails(i, fromSearch = false) {
   currentIndex = i;
   isSearchMode = fromSearch;
+  lastFocusedElement = document.activeElement;
   const detailRef = document.getElementById("details");
   detailRef.showModal();
   detailRef.classList.add("opened");
   detailRef.innerHTML = getDialogTemplate(i, fromSearch);
   renderDialogContent(i, fromSearch);
+  requestAnimationFrame(() => {
+    detailRef.querySelector(".close_btn")?.focus();
+  });
 }
 
 function switchPokemon(i, fromSearch = false) {
@@ -131,6 +146,7 @@ function closeDetails() {
   const detailRef = document.getElementById("details");
   detailRef.close();
   detailRef.classList.remove("opened");
+  lastFocusedElement?.focus();
 }
 
 function bubbleProtection(event) {

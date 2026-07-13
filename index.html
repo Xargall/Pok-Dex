@@ -61,12 +61,22 @@
     </div>
 
     <main id="content" class="main_content"></main>
-    <div class="center d_none" id="loader">
+    <div
+      class="center d_none"
+      id="loader"
+      role="status"
+      aria-label="loading Pokémon">
       <div class="wrapper">
         <div class="pokeball_load"></div>
       </div>
       <div class="eye"></div>
     </div>
+
+    <div
+      id="sr_live"
+      aria-live="polite"
+      aria-atomic="true"
+      class="sr_only"></div>
     <div class="load_more">
       <button id="loadMoreBtn" onclick="bulkLoadNextPokemon()">
         Show More!
