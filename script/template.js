@@ -1,7 +1,9 @@
 function getPokemonCardTemplate(i, fromSearch = false) {
-  const source = fromSearch ? searchResults : pokemonInfos;
-  return /*html*/ `
+    const source = fromSearch ? searchResults : pokemonInfos;
+    return /*html*/ `
         <section class="card_section">
+            <div class="card__shine"></div>
+            <div class="card__glare"></div>
             <div class="card_head">
                 <h3 id="pkm_name${i}"></h3>
                 <p>#${String(source[i].id).padStart(3, "0")}</p>
@@ -23,22 +25,22 @@ function getPokemonCardTemplate(i, fromSearch = false) {
 }
 
 function getTypesTemplate(i, index, source = pokemonInfos) {
-  const typeName = source[i].types[index].type.name;
-  const capitalizedType = typeName.charAt(0).toUpperCase() + typeName.slice(1);
-  return /*html*/ `
+    const typeName = source[i].types[index].type.name;
+    const capitalizedType = typeName.charAt(0).toUpperCase() + typeName.slice(1);
+    return /*html*/ `
     <div class="${typeName} type_tag">${capitalizedType}</div>
   `;
 }
 
 function getDialogTemplate(i, fromSearch = false) {
-  const isFiltered = filteredIndices.length > 0;
-  const currentPos = fromSearch? i: isFiltered? filteredIndices.indexOf(i): i;
-  const prevIndex = fromSearch? i - 1: isFiltered? filteredIndices[currentPos - 1]: i - 1;
-  const nextIndex = fromSearch? i + 1: isFiltered? filteredIndices[currentPos + 1]: i + 1;
-  const isFirst = fromSearch? i === 0: isFiltered? currentPos === 0: i === 0;
-  const isLast = fromSearch? i === searchResults.length - 1: isFiltered? currentPos === filteredIndices.length - 1: i === pokemonInfos.length - 1;
-  const source = fromSearch ? searchResults : pokemonInfos;
-  return /*html*/ `
+    const isFiltered = filteredIndices.length > 0;
+    const currentPos = fromSearch ? i : isFiltered ? filteredIndices.indexOf(i) : i;
+    const prevIndex = fromSearch ? i - 1 : isFiltered ? filteredIndices[currentPos - 1] : i - 1;
+    const nextIndex = fromSearch ? i + 1 : isFiltered ? filteredIndices[currentPos + 1] : i + 1;
+    const isFirst = fromSearch ? i === 0 : isFiltered ? currentPos === 0 : i === 0;
+    const isLast = fromSearch ? i === searchResults.length - 1 : isFiltered ? currentPos === filteredIndices.length - 1 : i === pokemonInfos.length - 1;
+    const source = fromSearch ? searchResults : pokemonInfos;
+    return /*html*/ `
     <div onclick="bubbleProtection(event)">
         <div class="dialog_controls">
             <button class="dialog_prev" onclick="switchPokemon(${prevIndex}, ${fromSearch})" style="${isFirst ? 'visibility: hidden' : ''}">‹</button>

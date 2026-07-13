@@ -40,12 +40,14 @@ async function fetchAllPokemonNames() {
 function getFrontPicture(pokeID) {
   return new Promise((resolve) => {
     const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
+
     if (imageCache[pokeID]) {
       const img = new Image();
       img.src = imageCache[pokeID];
       resolve(img);
       return;
     }
+
     const img = new Image();
     img.src = url;
     img.onload = () => {
@@ -53,8 +55,12 @@ function getFrontPicture(pokeID) {
       resolve(img);
     };
     img.onerror = () => {
-      console.warn(`[getFrontPicture] Sprite fehlt für #${pokeID}`);
-      resolve(null);
+      // Fallback auf den kleinen Default-Sprite
+      const fallbackUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
+      imageCache[pokeID] = fallbackUrl;  // Fallback auch cachen
+      const fallback = new Image();
+      fallback.src = fallbackUrl;
+      resolve(fallback);
     };
   });
 }
@@ -130,7 +136,7 @@ function renderName(i, source = pokemonInfos, idPrefix = "") {
   const ref = document.getElementById(`${idPrefix}name${i}`);
   const word = source[i].name;
   ref.innerHTML = formatPokemonName(source[i].name);
-  if (idPrefix === "dialog_") applyNameSizing(ref, word);
+  applyNameSizing(ref, word);
 }
 
 function applyNameSizing(ref, word) {
@@ -155,12 +161,22 @@ function renderTypes(i, source = pokemonInfos, idPrefix = "") {
 
 function renderPicture(i, source = pokemonInfos, idPrefix = "") {
   const pokeID = source[i].id;
+  const container = document.getElementById(`${idPrefix}pokemonImg${i}`);
+  if (!container) return;
+
   const img = new Image();
+  img.alt = "";  // leerer alt-Text – kein broken-image Text im Layout
   img.src =
     imageCache[pokeID] ??
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeID}.png`;
-  img.alt = source[i].name;
-  document.getElementById(`${idPrefix}pokemonImg${i}`).appendChild(img);
+
+  // Fallback auf kleineren Sprite wenn official-artwork fehlt
+  img.onerror = () => {
+    img.onerror = null;  // Loop verhindern
+    img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeID}.png`;
+  };
+
+  container.appendChild(img);
 }
 
 function renderMeasure(id, value, unit) {
@@ -456,3 +472,65 @@ function renderSearchCards(cardRef) {
     renderCardContent(i, true);
   });
 }
+
+// ============================================
+// HOLO CARD EFFECT – Maussteuerung (v3)
+// Ersetzt den vorherigen Block in script.js
+// ============================================
+
+function initHoloEffect() {
+  const content = document.getElementById("content");
+  let rafId = null;
+
+  content.addEventListener("mousemove", (e) => {
+    const card = e.target.closest(".card_section");
+    if (!card) return;
+
+    if (rafId) cancelAnimationFrame(rafId);
+
+    rafId = requestAnimationFrame(() => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+
+      const rotY = (x - 0.5) * 12;
+      const rotX = -(y - 0.5) * 8;
+
+      card.style.setProperty("--rx", `${rotY}deg`);
+      card.style.setProperty("--ry", `${rotX}deg`);
+      card.style.setProperty("--mx", `${x * 100}%`);
+      card.style.setProperty("--my", `${y * 100}%`);
+      card.style.setProperty("--posx", `${x * 100}%`);
+      card.style.setProperty("--posy", `${y * 100}%`);
+      card.style.setProperty("--o", "1");
+    });
+  });
+
+  content.addEventListener("mouseout", (e) => {
+    const card = e.target.closest(".card_section");
+    if (card && !card.contains(e.relatedTarget)) {
+      if (rafId) cancelAnimationFrame(rafId);
+      resetCard(card);
+    }
+  });
+}
+
+function resetCard(card) {
+  card.style.setProperty("--rx", "0deg");
+  card.style.setProperty("--ry", "0deg");
+  card.style.setProperty("--mx", "50%");
+  card.style.setProperty("--my", "50%");
+  card.style.setProperty("--posx", "50%");
+  card.style.setProperty("--posy", "50%");
+  card.style.setProperty("--o", "0");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new MutationObserver(() => {
+    if (document.querySelector(".card_section")) {
+      initHoloEffect();
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.getElementById("content"), { childList: true });
+});
