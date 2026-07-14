@@ -106,9 +106,8 @@ function setMoreBtn(loading) {
   isLoading = loading;
   document.querySelector(".load_more button").disabled = loading;
   const loader = document.getElementById("loader");
+  loader.classList.toggle("active", loading);
   loader.classList.toggle("d_none", !loading);
-  if (!loading) loader.style.display = "none";
-  else loader.style.display = "";
 
   // Screen Reader informieren
   const live = document.getElementById("sr_live");

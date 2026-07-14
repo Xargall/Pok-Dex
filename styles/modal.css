@@ -1,38 +1,42 @@
+/* ============================================
+   MODAL.CSS – PokéDex Dialog
+   ============================================
+   Inhaltsverzeichnis:
+   1.  Dialog – Basis & Animation
+   2.  Dialog – Header (Typfarbe, Sprite, Cry)
+   3.  Dialog – Body (Tabs, Description, Measures)
+   4.  Dialog – Controls (Prev/Next, Tab-Buttons)
+   5.  Stats Chart
+   6.  Evolution Chain
+   ============================================ */
+
+/* ============================================
+   1. DIALOG – BASIS & ANIMATION
+   ============================================ */
+
 dialog {
-  flex-wrap: wrap;
-  justify-content: center;
   border: none;
+  padding: 0;
   background-color: white;
   width: min(350px, calc(100vw - 24px));
   height: 600px;
   border-radius: 40px;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
   position: fixed;
-  padding: 0;
+  inset: 0;
+  margin: auto;
+  overflow: hidden;
 }
 
 dialog.opened {
-  border: none;
-  transition: all 2s ease-in;
-  width: min(350px, calc(100vw - 24px));
-  height: 600px;
-  border-radius: 40px;
-  overflow: hidden;
-  animation: myAnim 1s ease-in-out 0s 1 normal forwards;
-  padding: 0;
+  animation: dialogOpen 0.3s ease-out forwards;
 }
 
-@keyframes myAnim {
-  0% {
+@keyframes dialogOpen {
+  from {
     opacity: 0;
     transform: scale(0.6);
   }
-
-  100% {
+  to {
     opacity: 1;
     transform: scale(1);
   }
@@ -41,72 +45,67 @@ dialog.opened {
 dialog::backdrop {
   opacity: 0;
   background-color: black;
-  transition: all 250ms ease-in;
+  transition: opacity 250ms ease-in;
 }
 
 dialog.opened::backdrop {
   opacity: 0.5;
-  background-color: black;
-  transition: all 250ms ease-in;
+}
+
+/* ============================================
+   2. DIALOG – HEADER
+   ============================================ */
+
+.detail_head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 150px;
+  background-image: url(../assets/icons/pokeball-icon\ 1.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 230px 30px;
+  background-blend-mode: soft-light;
 }
 
 .dialog_headline {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px 24px 0;
   gap: 8px;
+  padding: 20px 24px 0;
+  width: 100%;
 }
 
-.dialog_headline > p {
+.dialog_headline p {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
 
 .dialog_headline h2 {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.15;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.15;
-  flex: 1;
-  min-width: 0;
 }
 
-.dialog_headline h2.name_md {
-  font-size: 1.5rem;
-}
-
-.dialog_headline h2.name_sm {
-  font-size: 1.1rem;
-}
-
-.detail_head {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 150px;
-  background-image: url(../assets/icons/pokeball-icon\ 1.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  background-position-x: 230px;
-  background-position-y: 30px;
-  background-blend-mode: soft-light;
-}
+.dialog_headline h2.name_md { font-size: 1.5rem; }
+.dialog_headline h2.name_sm { font-size: 1.1rem; }
 
 .close_btn {
   position: absolute;
   top: 35px;
   right: 30px;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
   width: 32px;
   height: 32px;
   font-size: 16px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
   cursor: pointer;
   font-family: "Pixelify Sans", sans-serif;
 }
@@ -132,24 +131,32 @@ dialog.opened::backdrop {
   height: 24px;
   align-self: flex-end;
   transform: translate(-43px, -63px);
-  cursor: pointer;
   border: none;
   background: none;
+  cursor: pointer;
 }
 
-.dialog_types {
-  display: flex;
-  gap: 8px;
-}
+/* ============================================
+   3. DIALOG – BODY
+   ============================================ */
 
 .detail_body {
-  background-color: white;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
-  height: 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 420px;
+  background-color: white;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.detail_body button,
+.detail_body a,
+.detail_body canvas,
+.detail_body .evolution {
+  pointer-events: auto;
 }
 
 .detail_pkm {
@@ -159,8 +166,9 @@ dialog.opened::backdrop {
   padding: 16px 8px 8px;
 }
 
-.detail_pkm > h2 {
-  padding: 6px;
+.dialog_types {
+  display: flex;
+  gap: 8px;
 }
 
 .description {
@@ -183,32 +191,93 @@ dialog.opened::backdrop {
 .measures_style {
   width: 70px;
   height: 40px;
-  background: #e0dbcc;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-
+  background: #e0dbcc;
   border: 1px solid black;
   border-radius: 12px;
-
-  /* https://smoothshadows.com/#djEsMSw1LDAuMjYsMTAsMywwLCMwMzA3MTIsI2YzZjRmNiwjZmZmZmZmLDI%3D */
   box-shadow:
-    0px 0px 0px rgba(3, 7, 18, 0.05),
     0px 0px 2px rgba(3, 7, 18, 0.1),
     0px 1px 4px rgba(3, 7, 18, 0.16),
-    0px 2px 6px rgba(3, 7, 18, 0.21),
     0px 3px 10px rgba(3, 7, 18, 0.26);
 }
 
-.stat_block {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 160px;
-  max-height: 250px;
-  scale: 1.25;
+.tab_content {
+  width: 100%;
 }
+
+.tab_content:not(.d_none) {
+  display: flex;
+  flex: 1;
+}
+
+#tab_content_evo:not(.d_none) {
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   4. DIALOG – CONTROLS
+   ============================================ */
+
+.dialog_controls {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  z-index: 10;
+}
+
+.dialog_prev,
+.dialog_next {
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #a4121c;
+  color: #fff;
+  font-family: "Pixelify Sans", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #6b0b12;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+
+.dialog_prev:hover,
+.dialog_next:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #6b0b12;
+}
+
+.dialog_prev:active,
+.dialog_next:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #6b0b12;
+}
+
+.tab_btn {
+  background: #ddd;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-family: "Pixelify Sans", sans-serif;
+  cursor: pointer;
+}
+
+.tab_btn.active {
+  background: #a4121c;
+  color: white;
+}
+
+/* ============================================
+   5. STATS CHART
+   ============================================ */
 
 .stat_chart {
   display: flex;
@@ -219,17 +288,28 @@ dialog.opened::backdrop {
   padding: 0 20px 0 0;
 }
 
+.stat_block {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 160px;
+  max-height: 250px;
+  scale: 1.25;
+}
+
+/* ============================================
+   6. EVOLUTION CHAIN
+   ============================================ */
+
 .evolution {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  flex-direction: column;
-  padding: 8px 6px 70px;
   gap: 8px;
-  height: 350px;
-  overflow-y: auto;
   width: 100%;
-  margin: 0;
+  height: 350px;
+  padding: 8px 6px 70px;
+  overflow-y: auto;
   container-type: inline-size;
   mask-image: linear-gradient(
     to bottom,
@@ -247,57 +327,9 @@ dialog.opened::backdrop {
   );
 }
 
-.evolution::-webkit-scrollbar {
-  width: 4px;
-}
-
-.evolution::-webkit-scrollbar-thumb {
-  background: #e8dcc0;
-  border-radius: 2px;
-}
-
-.evolution::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.evo_stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  border-radius: 14px;
-  background: #fdf8ee;
-  border: 2px solid #e8dcc0;
-  transition:
-    transform 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.evo_stage:hover {
-  transform: translateY(-3px);
-  border-color: #c0392b;
-}
-
-.evo_stage img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-}
-
-.evo_stage_name {
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: #4a3c28;
-  text-transform: capitalize;
-}
-
-.evo_stage.evo_current {
-  background: #fdebea;
-  border-color: #c0392b;
-  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25);
-}
+.evolution::-webkit-scrollbar { width: 4px; }
+.evolution::-webkit-scrollbar-thumb { background: #e8dcc0; border-radius: 2px; }
+.evolution::-webkit-scrollbar-track { background: transparent; }
 
 .evo_chain {
   display: flex;
@@ -329,6 +361,43 @@ dialog.opened::backdrop {
   stroke-width: 2.5;
 }
 
+.evo_stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: #fdf8ee;
+  border: 2px solid #e8dcc0;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.evo_stage:hover {
+  transform: translateY(-3px);
+  border-color: #c0392b;
+}
+
+.evo_stage img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.evo_stage_name {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a3c28;
+  text-transform: capitalize;
+}
+
+.evo_stage.evo_current {
+  background: #fdebea;
+  border-color: #c0392b;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25);
+}
+
 .evo_method {
   font-family: "Pixelify Sans", sans-serif;
   font-size: 9px;
@@ -339,107 +408,8 @@ dialog.opened::backdrop {
   white-space: nowrap;
 }
 
-.evo_method {
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 9px;
-  color: #8a7a5c;
-  white-space: nowrap;
-}
-
 @container (max-width: 300px) {
-  .evo_stage img {
-    width: 48px;
-    height: 48px;
-  }
-  .evo_stage {
-    padding: 8px 10px;
-  }
-  .evo_stage_name {
-    font-size: 10px;
-  }
-}
-
-.dialog_prev,
-.dialog_next {
-  bottom: 20px;
-  top: unset;
-  background: #a4121c;
-  color: #fff;
-  font-family: "Pixelify Sans", sans-serif;
-  font-size: 24px;
-  border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #6b0b12;
-  transition:
-    transform 0.08s,
-    box-shadow 0.08s;
-}
-
-.dialog_prev {
-  left: 10px;
-}
-.dialog_next {
-  right: 10px;
-}
-
-.dialog_prev:hover,
-.dialog_next:hover {
-  transform: translateY(calc(-2px));
-  box-shadow: 0 6px 0 #6b0b12;
-}
-
-.dialog_prev:active,
-.dialog_next:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 #6b0b12;
-}
-
-.tab_buttons {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 60px;
-}
-
-.tab_btn {
-  background: #ddd;
-  border: none;
-  border-radius: 20px;
-  padding: 6px 20px;
-  font-family: "Pixelify Sans", sans-serif;
-  cursor: pointer;
-}
-
-.tab_btn.active {
-  background: #a4121c;
-  color: white;
-}
-
-.dialog_controls {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-}
-
-.tab_content {
-  width: 100%;
-}
-
-.tab_content:not(.d_none) {
-  display: flex;
-  flex: 1;
-}
-
-#tab_content_evo:not(.d_none) {
-  align-items: center;
-  justify-content: center;
+  .evo_stage { padding: 8px; }
+  .evo_stage img { width: 48px; height: 48px; }
+  .evo_stage_name { font-size: 10px; }
 }

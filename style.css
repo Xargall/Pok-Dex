@@ -320,27 +320,25 @@ input {
 }
 
 .center {
-  display: flex;
+  display: none;
   justify-content: center;
-  background: #6b0d14;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  transition:
-    height 0.3s ease,
-    padding 0.3s ease;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  pointer-events: none;
 }
 
-.center:not(.d_none) {
-  height: auto;
-  padding: 70px;
+.center.active {
+  display: flex;
 }
 
 .wrapper {
-  position: absolute;
-  left: 50%;
-  background: #6b0d14;
-  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pokeball_load {
